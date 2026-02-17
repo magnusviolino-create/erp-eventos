@@ -4,7 +4,7 @@ import { authenticate } from '../middleware/authMiddleware.js';
 
 const router = Router();
 
-router.use(authenticate);
+router.use(authenticate as any);
 
 router.post('/', createTransaction as any);
 router.delete('/:id', deleteTransaction as any);

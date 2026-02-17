@@ -76,7 +76,7 @@ export const createTransaction = async (req: AuthRequest, res: Response): Promis
 
 export const deleteTransaction = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        const { id } = req.params;
+        const { id } = req.params as { id: string };
         const { role, unitId, id: userId } = req.user;
 
         if (role === 'OBSERVER') {
@@ -120,7 +120,7 @@ export const deleteTransaction = async (req: AuthRequest, res: Response): Promis
 
 export const updateTransaction = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        const { id } = req.params;
+        const { id } = req.params as { id: string };
         const { role, unitId, id: userId } = req.user;
 
         const updateSchema = z.object({
@@ -176,7 +176,7 @@ export const updateTransaction = async (req: AuthRequest, res: Response): Promis
     } catch (error: any) {
         console.error('Error updating transaction:', error);
         if (error instanceof z.ZodError) {
-            res.status(400).json({ error: 'Validation Error', details: error.errors });
+            res.status(400).json({ error: 'Validation Error', details: (error as any).errors });
             return;
         }
         res.status(400).json({ error: 'Failed to update transaction', details: error.message || error });
