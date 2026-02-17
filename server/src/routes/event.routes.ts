@@ -4,7 +4,7 @@ import { authenticate } from '../middleware/authMiddleware.js';
 
 const router = Router();
 
-router.use(authenticate); // Protect all event routes
+router.use(authenticate as any); // Protect all event routes
 
 router.post('/', createEvent as any);
 router.get('/', getEvents as any);
