@@ -67,7 +67,7 @@ export const createUser = async (req: AuthRequest, res: Response): Promise<void>
 
 export const getUserById = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        const { id } = req.params;
+        const { id } = req.params as { id: string };
 
         if (req.user.role !== Role.MASTER) {
             res.status(403).json({ error: 'Access denied' });
