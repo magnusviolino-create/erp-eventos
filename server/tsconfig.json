@@ -20,6 +20,7 @@
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": false,
+    "esModuleInterop": true,
     // Style Options
     // "noImplicitReturns": true,
     // "noImplicitOverride": true,
