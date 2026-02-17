@@ -6,10 +6,10 @@ const router = Router();
 
 router.use(authenticate); // Protect all event routes
 
-router.post('/', createEvent);
-router.get('/', getEvents);
-router.get('/:id', getEventById);
-router.put('/:id', updateEvent);
-router.delete('/:id', deleteEvent);
+router.post('/', createEvent as any);
+router.get('/', getEvents as any);
+router.get('/:id', getEventById as any);
+router.put('/:id', updateEvent as any);
+router.delete('/:id', deleteEvent as any);
 
 export default router;

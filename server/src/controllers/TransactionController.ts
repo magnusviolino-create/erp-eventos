@@ -67,7 +67,7 @@ export const createTransaction = async (req: AuthRequest, res: Response): Promis
     } catch (error: any) {
         console.error('Error creating transaction:', error);
         if (error instanceof z.ZodError) {
-            res.status(400).json({ error: 'Validation Error', details: error.errors });
+            res.status(400).json({ error: 'Validation Error', details: (error as any).errors });
             return;
         }
         res.status(400).json({ error: 'Failed to create transaction', details: error.message || error });
@@ -94,7 +94,8 @@ export const deleteTransaction = async (req: AuthRequest, res: Response): Promis
             return;
         }
 
-        const event = transaction.event;
+        // Type assertion for event since include was used
+        const event = (transaction as any).event;
 
         // Access Control
         if (role !== 'MASTER') {
@@ -147,7 +148,7 @@ export const updateTransaction = async (req: AuthRequest, res: Response): Promis
             return;
         }
 
-        const event = transaction.event;
+        const event = (transaction as any).event;
 
         if (role !== 'MASTER') {
             if (unitId && event.unitId !== unitId) {
