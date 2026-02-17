@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  MASTER
+  MANAGER
+  STANDARD
+  OBSERVER
+}
+
+model Unit {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  users     User[]
+  events    Event[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("units")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(STANDARD)
+  unitId    String?
+  unit      Unit?    @relation(fields: [unitId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  events    Event[]
+
+  @@map("users")
+}
+
+enum EventStatus {
+  OPEN
+  IN_PROGRESS
+  PAUSED
+  COMPLETED
+  CANCELED
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  name        String
+  startDate   DateTime
+  endDate     DateTime
+  location    String?
+  description String?
+  eventCode   String?  @unique
+  budget      Float?   @default(0)
+  status      EventStatus @default(OPEN)
+  project     String?
+  action      String?
+  responsibleEmail String?
+  responsiblePhone String?
+  responsibleUnit String?
+  cancellationReason String?
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  unitId      String?
+  unit        Unit?    @relation(fields: [unitId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  transactions Transaction[]
+
+  @@map("events")
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+
+enum TransactionStatus {
+  APPROVED
+  REJECTED
+  QUOTATION
+  PRODUCTION
+  COMPLETED
+}
+
+model Transaction {
+  id          String          @id @default(uuid())
+  description     String
+  amount          Float
+  type            TransactionType
+  status          TransactionStatus @default(QUOTATION) // New Status Field
+  requisitionNum  String? // Número da Requisição
+  serviceOrderNum String? // Número da OC (Ordem de Serviço/Compra)
+  date            DateTime        @default(now())
+  eventId         String
+  event       Event           @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@map("transactions")
+}

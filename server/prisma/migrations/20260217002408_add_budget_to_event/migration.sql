@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "events" ADD COLUMN     "budget" DOUBLE PRECISION DEFAULT 0;
