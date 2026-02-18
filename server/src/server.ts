@@ -15,7 +15,7 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3001;
 
-app.use(helmet());
+app.use((helmet as any)());
 app.use(cors());
 app.use(express.json());
 
