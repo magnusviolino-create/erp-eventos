@@ -13,6 +13,7 @@ import UnitsPage from './pages/UnitsPage';
 import UnitFormPage from './pages/UnitFormPage';
 import ProfilePage from './pages/ProfilePage';
 import ProtectedRoute from './components/ProtectedRoute';
+import { WhatsAppButton } from './components/WhatsAppButton';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
 
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
+          <WhatsAppButton />
         </ThemeProvider>
       </AuthProvider>
     </Router>
