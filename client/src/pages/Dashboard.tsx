@@ -488,7 +488,7 @@ const Dashboard: FC = () => {
             </div>
 
             {/* Advanced Dashboard Controls */}
-            <div className="mt-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col gap-4 transition-colors duration-300">
+            <div className="mt-8 bg-white dark:bg-gray-700 p-6 rounded-lg shadow-lg flex flex-col gap-4 transition-colors duration-300">
                 <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">Filtros do Dashboard</h2>
 
                 {/* Search and Clear Row */}
@@ -676,7 +676,7 @@ const Dashboard: FC = () => {
 
                 {/* Charts Section */}
                 <div className="mt-8 grid gap-6 md:grid-cols-2">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition duration-300 flex flex-col">
+                    <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg hover:shadow-xl transition duration-300 flex flex-col">
                         <div className="bg-gradient-to-r from-blue-500 to-blue-700 rounded-t-lg p-4 flex items-center justify-center">
                             <h3 className="text-lg font-bold text-white text-center drop-shadow-sm">Eventos Realizados</h3>
                         </div>
@@ -736,7 +736,7 @@ const Dashboard: FC = () => {
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition duration-300 flex flex-col">
+                    <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg hover:shadow-xl transition duration-300 flex flex-col">
                         <div className="bg-gradient-to-r from-green-500 to-green-700 rounded-t-lg p-4 flex items-center justify-center">
                             <h3 className="text-lg font-bold text-white text-center drop-shadow-sm">Despesas</h3>
                         </div>
@@ -833,7 +833,7 @@ const Dashboard: FC = () => {
                 </div >
 
                 <div className="mt-8 grid gap-6 md:grid-cols-2">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition duration-300 flex overflow-hidden">
+                    <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg hover:shadow-xl transition duration-300 flex overflow-hidden">
                         <div className="bg-blue-600 w-24 flex items-center justify-center shrink-0">
                             <Calendar className="w-10 h-10 text-white" />
                         </div>
@@ -843,7 +843,7 @@ const Dashboard: FC = () => {
                             <Link to="/events" className="inline-block text-blue-600 dark:text-blue-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition">Ver Eventos &rarr;</Link>
                         </div>
                     </div>
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition duration-300 flex overflow-hidden">
+                    <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg hover:shadow-xl transition duration-300 flex overflow-hidden">
                         <div className="bg-green-600 w-24 flex items-center justify-center shrink-0">
                             <PlusCircle className="w-10 h-10 text-white" />
                         </div>
@@ -855,7 +855,7 @@ const Dashboard: FC = () => {
                     </div>
 
                     {user?.role === 'MASTER' && (
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition duration-300 flex overflow-hidden">
+                        <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg hover:shadow-xl transition duration-300 flex overflow-hidden">
                             <div className="bg-purple-600 w-24 flex items-center justify-center shrink-0">
                                 <Users className="w-10 h-10 text-white" />
                             </div>
@@ -868,7 +868,7 @@ const Dashboard: FC = () => {
                     )}
 
                     {user?.role === 'MASTER' && (
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition duration-300 flex overflow-hidden">
+                        <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg hover:shadow-xl transition duration-300 flex overflow-hidden">
                             <div className="bg-orange-600 w-24 flex items-center justify-center shrink-0">
                                 <Building2 className="w-10 h-10 text-white" />
                             </div>
