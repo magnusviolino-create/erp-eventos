@@ -4,6 +4,7 @@ import type { Event } from '../types/Event';
 import { AuthContext } from '../contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import { Clock, PlayCircle, CheckCircle, XCircle, PauseCircle } from 'lucide-react';
+import { ThemeToggle } from '../components/ThemeToggle';
 
 interface Unit {
     id: string;
@@ -290,12 +291,13 @@ const EventsPage: FC = () => {
     if (loading) return <div className="p-8 text-center">Carregando eventos...</div>;
 
     return (
-        <div className="min-h-screen bg-gray-100 p-4 md:p-8">
+        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4 md:p-8 transition-colors duration-300">
             <div className="max-w-6xl mx-auto">
                 <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                    <h1 className="text-2xl font-bold text-gray-800">Meus Eventos</h1>
-                    <div className="flex gap-4">
-                        <Link to="/dashboard" className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition">
+                    <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Meus Eventos</h1>
+                    <div className="flex gap-4 items-center">
+                        <ThemeToggle />
+                        <Link to="/dashboard" className="bg-gray-500 dark:bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-600 dark:hover:bg-gray-500 transition">
                             Voltar
                         </Link>
                         <Link to="/events/new" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
@@ -306,7 +308,7 @@ const EventsPage: FC = () => {
             </div>
 
             {/* Filters and Summary Section */}
-            <div className="bg-white rounded-lg shadow-sm mb-8 overflow-hidden">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm mb-8 overflow-hidden transition-colors duration-300">
                 {/* Header Strip for Summary Section if specific unit selected */}
                 {selectedUnit !== 'all' && (
                     <div className={`h-2 w-full bg-gradient-to-r ${currentUnitColor}`}></div>
@@ -319,7 +321,7 @@ const EventsPage: FC = () => {
                         <div className="flex gap-2">
                             <div className="relative flex-1">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <span className="text-gray-500">🔍</span>
+                                    <span className="text-gray-500 dark:text-gray-400">🔍</span>
                                 </div>
                                 <input
                                     type="text"
@@ -327,7 +329,7 @@ const EventsPage: FC = () => {
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     onKeyDown={handleKeyDown}
-                                    className="pl-10 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                    className="pl-10 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white dark:placeholder-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 transition-colors duration-300"
                                 />
                             </div>
                             <button
@@ -338,7 +340,7 @@ const EventsPage: FC = () => {
                             </button>
                             <button
                                 onClick={handleClear}
-                                className="px-4 py-2 text-sm text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300 transition whitespace-nowrap"
+                                className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition whitespace-nowrap"
                                 title="Limpar Filtros"
                             >
                                 Limpar
@@ -349,7 +351,7 @@ const EventsPage: FC = () => {
                         <div className="w-full">
                             <button
                                 onClick={() => setShowFilters(!showFilters)}
-                                className="text-blue-600 text-sm font-medium hover:underline mb-4 flex items-center gap-1"
+                                className="text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline mb-4 flex items-center gap-1"
                             >
                                 {showFilters ? 'Ocultar Filtros' : 'Mais Filtros'}
                                 <span className="text-xs">{showFilters ? '▲' : '▼'}</span>
@@ -361,11 +363,11 @@ const EventsPage: FC = () => {
                                         {/* Unit Filter (MASTER only) */}
                                         {user?.role === 'MASTER' && (
                                             <div className="flex flex-col">
-                                                <label className="text-sm font-medium text-gray-600 mb-1">Unidade</label>
+                                                <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Unidade</label>
                                                 <select
                                                     value={selectedUnit}
                                                     onChange={(e) => setSelectedUnit(e.target.value)}
-                                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-48 p-2.5"
+                                                    className="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-48 p-2.5"
                                                 >
                                                     <option value="all">Todas as Unidades</option>
                                                     {units.map((u) => (
@@ -378,11 +380,11 @@ const EventsPage: FC = () => {
 
                                         )}
                                         <div className="flex flex-col">
-                                            <label className="text-sm font-medium text-gray-600 mb-1">Status</label>
+                                            <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Status</label>
                                             <select
                                                 value={selectedStatus}
                                                 onChange={(e) => setSelectedStatus(e.target.value)}
-                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-40 p-2.5"
+                                                className="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-40 p-2.5"
                                             >
                                                 <option value="all">Todos</option>
                                                 <option value="OPEN">Aberto</option>
@@ -393,11 +395,11 @@ const EventsPage: FC = () => {
                                             </select>
                                         </div>
                                         <div className="flex flex-col">
-                                            <label className="text-sm font-medium text-gray-600 mb-1">Mês</label>
+                                            <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Mês</label>
                                             <select
                                                 value={selectedMonth}
                                                 onChange={(e) => setSelectedMonth(e.target.value)}
-                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-40 p-2.5"
+                                                className="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-40 p-2.5"
                                             >
                                                 {months.map((m) => (
                                                     <option key={m.value} value={m.value}>
@@ -407,11 +409,11 @@ const EventsPage: FC = () => {
                                             </select>
                                         </div>
                                         <div className="flex flex-col">
-                                            <label className="text-sm font-medium text-gray-600 mb-1">Ano</label>
+                                            <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Ano</label>
                                             <select
                                                 value={selectedYear}
                                                 onChange={(e) => setSelectedYear(e.target.value)}
-                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24 p-2.5"
+                                                className="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24 p-2.5"
                                             >
                                                 <option value="all">Todos os Anos</option>
                                                 {years.map((y) => (
@@ -424,14 +426,14 @@ const EventsPage: FC = () => {
                                     </div>
 
                                     {/* Advanced Filters Row */}
-                                    <div className="flex flex-wrap gap-4 items-end pt-2 border-t border-gray-100 w-full">
+                                    <div className="flex flex-wrap gap-4 items-end pt-2 border-t border-gray-100 dark:border-gray-700 w-full">
                                         {/* Sort By */}
                                         <div className="flex flex-col">
-                                            <label className="text-sm font-medium text-gray-600 mb-1">Ordenar por</label>
+                                            <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Ordenar por</label>
                                             <select
                                                 value={sortBy}
                                                 onChange={(e) => setSortBy(e.target.value)}
-                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-40 p-2.5"
+                                                className="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-40 p-2.5"
                                             >
                                                 <option value="name-asc">Nome (A-Z)</option>
                                                 <option value="name-desc">Nome (Z-A)</option>
@@ -446,7 +448,7 @@ const EventsPage: FC = () => {
 
                                         {/* Budget Range */}
                                         <div className="flex flex-col flex-1 min-w-[300px]">
-                                            <label className="text-sm font-medium text-gray-600 mb-1">Faixa de Orçamento</label>
+                                            <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Faixa de Orçamento</label>
                                             <div className="flex items-center gap-2">
                                                 <div className="relative w-full">
                                                     <input
@@ -459,9 +461,9 @@ const EventsPage: FC = () => {
                                                             setMaxBudget(val);
                                                             setMaxBudgetInput(val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
                                                         }}
-                                                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                                        className="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
                                                     />
-                                                    <div className="flex justify-between text-xs text-gray-500 mt-1">
+                                                    <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
                                                         <span>0</span>
                                                         <span>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(maxBudgetLimit)}</span>
                                                     </div>
@@ -472,15 +474,15 @@ const EventsPage: FC = () => {
                                                         placeholder="Mín"
                                                         value={minBudgetInput}
                                                         onChange={handleMinBudgetChange}
-                                                        className="w-24 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2"
+                                                        className="w-24 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2"
                                                     />
-                                                    <span className="text-gray-400">-</span>
+                                                    <span className="text-gray-400"> - </span>
                                                     <input
                                                         type="text"
                                                         placeholder="Máx"
                                                         value={maxBudgetInput}
                                                         onChange={handleMaxBudgetChange}
-                                                        className="w-28 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2"
+                                                        className="w-28 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2"
                                                     />
                                                 </div>
                                             </div>
@@ -500,7 +502,7 @@ const EventsPage: FC = () => {
                     </div>
 
                     {/* Financial Summary Widget */}
-                    <div className={`w-full md:w-auto bg-white rounded-xl shadow-lg border-2 border-white min-w-[340px] overflow-hidden transform transition hover:scale-105 duration-300`}>
+                    <div className={`w-full md:w-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg border-2 border-white dark:border-gray-700 min-w-[340px] overflow-hidden transform transition hover:scale-105 duration-300`}>
                         <div className={`py-2 px-4 bg-gradient-to-r ${currentUnitColor} text-white`}>
                             <h3 className="text-xs font-bold uppercase tracking-widest text-center shadow-sm">
                                 Resumo Financeiro {selectedUnit !== 'all' ? `(${selectedUnit})` : ''}
@@ -510,27 +512,27 @@ const EventsPage: FC = () => {
                         <div className="p-6">
                             <div className="flex justify-between items-center mb-4 gap-8">
                                 <div>
-                                    <p className="text-xs text-gray-500 mb-1 font-medium">Orçamento</p>
-                                    <p className="text-lg font-bold text-gray-800">
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1 font-medium uppercase tracking-wide">Orçamento</p>
+                                    <p className="text-lg font-bold text-gray-800 dark:text-white">
                                         {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalBudget)}
                                     </p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-xs text-gray-500 mb-1 font-medium">Gasto</p>
-                                    <p className="text-lg font-bold text-red-600">
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1 font-medium uppercase tracking-wide">Gasto</p>
+                                    <p className="text-lg font-bold text-red-600 dark:text-red-400">
                                         {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalSpent)}
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="pt-4 border-t border-gray-100">
+                            <div className="pt-4 border-t border-gray-100 dark:border-gray-700">
                                 <div className="flex justify-between items-center mb-2">
-                                    <span className="text-xs font-medium text-gray-500">Saldo Disponível</span>
-                                    <span className={`text-xl font-bold ${totalBalance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Saldo Disponível</span>
+                                    <span className={`text-xl font-bold ${totalBalance >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                                         {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalBalance)}
                                     </span>
                                 </div>
-                                <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                                <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2 overflow-hidden">
                                     <div
                                         className={`h-2 rounded-full transition-all duration-500 ${spendingPercentage > 100 ? 'bg-red-500' : 'bg-blue-600'}`}
                                         style={{ width: `${Math.min(spendingPercentage, 100)}%` }}
@@ -547,7 +549,7 @@ const EventsPage: FC = () => {
 
                 {
                     filteredEvents.length === 0 ? (
-                        <p className="text-center text-gray-500 bg-white p-8 rounded shadow">
+                        <p className="text-center text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 p-8 rounded shadow border border-dashed border-gray-300 dark:border-gray-700">
                             Nenhum evento encontrado para o período selecionado.
                         </p>
                     ) : (
@@ -597,12 +599,12 @@ const EventsPage: FC = () => {
                                     TimeIcon = PlayCircle;
                                 } else {
                                     timeStatusLabel = 'Encerrado';
-                                    timeStatusColor = 'bg-gray-100 text-gray-700 border-gray-200';
+                                    timeStatusColor = 'bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600';
                                     TimeIcon = CheckCircle;
                                 }
 
                                 return (
-                                    <div key={event.id} className="bg-white rounded-xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col group border border-gray-100">
+                                    <div key={event.id} className="bg-white dark:bg-gray-700 rounded-xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col group border border-gray-100 dark:border-gray-600">
                                         {/* Full Colored Header */}
                                         <div className={`px-6 py-6 bg-gradient-to-r ${eventColor} relative flex flex-col items-center justify-center min-h-[120px]`}>
                                             {/* Status Badge - Top Left */}
@@ -635,42 +637,42 @@ const EventsPage: FC = () => {
                                         {/* Card Body */}
                                         <div className="p-5 flex-1 flex flex-col">
                                             <div className="space-y-1.5 mb-3">
-                                                <div className="flex items-start text-gray-700 text-sm">
+                                                <div className="flex items-start text-gray-700 dark:text-gray-200 text-sm">
                                                     <span className="w-5 flex justify-center mr-2 text-base opacity-70">🗓️</span>
-                                                    <span className="font-medium pt-0.5 text-gray-600">
+                                                    <span className="font-medium pt-0.5 text-gray-600 dark:text-gray-300">
                                                         {start.toLocaleDateString()}
                                                         {start.toLocaleDateString() !== end.toLocaleDateString() &&
                                                             ` - ${end.toLocaleDateString()}`}
                                                     </span>
                                                 </div>
-                                                <div className="flex items-center text-gray-700 text-sm">
+                                                <div className="flex items-center text-gray-700 dark:text-gray-200 text-sm">
                                                     <span className="w-5 flex justify-center mr-2 text-base opacity-70">⏰</span>
-                                                    <span className="font-medium text-gray-600">
+                                                    <span className="font-medium text-gray-600 dark:text-gray-300">
                                                         {start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                     </span>
                                                 </div>
                                                 {event.location && (
-                                                    <div className="flex items-start text-gray-700 text-sm">
+                                                    <div className="flex items-start text-gray-700 dark:text-gray-200 text-sm">
                                                         <span className="w-5 flex justify-center mr-2 text-base opacity-70">📍</span>
-                                                        <span className="font-medium pt-0.5 line-clamp-2 text-gray-600" title={event.location}>{event.location}</span>
+                                                        <span className="font-medium pt-0.5 line-clamp-2 text-gray-600 dark:text-gray-300" title={event.location}>{event.location}</span>
                                                     </div>
                                                 )}
                                             </div>
 
                                             <div className="mt-auto">
                                                 {event.budget !== undefined && event.budget > 0 && (
-                                                    <div className="pt-3 border-t border-gray-100 grid grid-cols-2 gap-4 mb-3">
+                                                    <div className="pt-3 border-t border-gray-100 dark:border-gray-600 grid grid-cols-2 gap-4 mb-3">
                                                         <div>
-                                                            <p className="text-gray-400 font-semibold text-[10px] uppercase tracking-wide mb-0.5">Orçamento</p>
-                                                            <p className="font-bold text-gray-700 text-base">
+                                                            <p className="text-gray-400 dark:text-gray-500 font-semibold text-[10px] uppercase tracking-wide mb-0.5">Orçamento</p>
+                                                            <p className="font-bold text-gray-700 dark:text-gray-200 text-base">
                                                                 {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(event.budget)}
                                                             </p>
                                                         </div>
                                                         <div className="text-right">
-                                                            <p className="text-gray-400 font-semibold text-[10px] uppercase tracking-wide mb-0.5">Saldo</p>
+                                                            <p className="text-gray-400 dark:text-gray-500 font-semibold text-[10px] uppercase tracking-wide mb-0.5">Saldo</p>
                                                             <p className={`font-bold text-base ${(event.budget - (event.transactions || [])
                                                                 .filter(t => t.type === 'EXPENSE')
-                                                                .reduce((acc, t) => acc + t.amount, 0)) >= 0 ? 'text-green-600' : 'text-red-600'
+                                                                .reduce((acc, t) => acc + t.amount, 0)) >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                                                                 }`}>
                                                                 {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
                                                                     event.budget - (event.transactions || [])
@@ -682,7 +684,7 @@ const EventsPage: FC = () => {
                                                     </div>
                                                 )}
 
-                                                <div className="flex justify-between items-center pt-2 border-t border-gray-50">
+                                                <div className="flex justify-between items-center pt-2 border-t border-gray-50 dark:border-gray-600">
                                                     <span className={`text-[10px] font-semibold px-2.5 py-0.5 rounded border ${timeStatusColor} bg-opacity-50 uppercase tracking-wide flex items-center gap-1`}>
                                                         <TimeIcon size={12} />
                                                         {timeStatusLabel}
@@ -692,7 +694,7 @@ const EventsPage: FC = () => {
                                                         <button onClick={() => handleDelete(event.id)} className="text-gray-400 hover:text-red-500 transition-colors p-1" title="Excluir">
                                                             🗑️
                                                         </button>
-                                                        <Link to={`/events/${event.id}`} className="text-blue-500 text-xs font-semibold hover:text-blue-700 flex items-center gap-1 transition-colors uppercase tracking-wide hover:underline">
+                                                        <Link to={`/events/${event.id}`} className="text-blue-500 dark:text-blue-400 text-xs font-semibold hover:text-blue-700 dark:hover:text-blue-300 flex items-center gap-1 transition-colors uppercase tracking-wide hover:underline">
                                                             Ver Detalhes <span>→</span>
                                                         </Link>
                                                     </div>
