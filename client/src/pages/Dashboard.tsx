@@ -137,7 +137,7 @@ const Carousel = ({ items }: { items: Event[] }) => {
                     }
 
                     return (
-                        <div key={event.id} className="min-w-[300px] md:min-w-[350px] bg-white rounded-xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 snap-start flex flex-col border border-gray-100 select-none overflow-hidden group">
+                        <div key={event.id} className="min-w-[300px] md:min-w-[350px] bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 snap-start flex flex-col border border-gray-100 dark:border-gray-700 select-none overflow-hidden group">
                             {/* Full Colored Header */}
                             <div className={`px-6 py-6 bg-gradient-to-r ${eventColor} relative flex flex-col items-center justify-center min-h-[120px]`}>
                                 {/* Status Badge - Top Left (Workflow Status Only) */}
@@ -168,39 +168,39 @@ const Carousel = ({ items }: { items: Event[] }) => {
                             {/* Card Body */}
                             <div className="p-5 flex-1 flex flex-col">
                                 <div className="space-y-1.5 mb-3">
-                                    <div className="flex items-start text-gray-700 text-sm">
+                                    <div className="flex items-start text-gray-700 dark:text-gray-200 text-sm">
                                         <span className="w-5 flex justify-center mr-2 text-base opacity-70">🗓️</span>
-                                        <span className="font-medium pt-0.5 text-gray-600">
+                                        <span className="font-medium pt-0.5 text-gray-600 dark:text-gray-300">
                                             {start.toLocaleDateString()}
                                             {start.toLocaleDateString() !== end.toLocaleDateString() &&
                                                 ` - ${end.toLocaleDateString()}`}
                                         </span>
                                     </div>
-                                    <div className="flex items-center text-gray-700 text-sm">
+                                    <div className="flex items-center text-gray-700 dark:text-gray-200 text-sm">
                                         <span className="w-5 flex justify-center mr-2 text-base opacity-70">⏰</span>
-                                        <span className="font-medium text-gray-600">
+                                        <span className="font-medium text-gray-600 dark:text-gray-300">
                                             {start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                         </span>
                                     </div>
                                     {event.location && (
-                                        <div className="flex items-start text-gray-700 text-sm">
+                                        <div className="flex items-start text-gray-700 dark:text-gray-200 text-sm">
                                             <span className="w-5 flex justify-center mr-2 text-base opacity-70">📍</span>
-                                            <span className="font-medium pt-0.5 line-clamp-2 text-gray-600" title={event.location}>{event.location}</span>
+                                            <span className="font-medium pt-0.5 line-clamp-2 text-gray-600 dark:text-gray-300" title={event.location}>{event.location}</span>
                                         </div>
                                     )}
                                 </div>
 
                                 <div className="mt-auto">
                                     {event.budget !== undefined && event.budget > 0 && (
-                                        <div className="pt-3 border-t border-gray-100 grid grid-cols-2 gap-4 mb-3">
+                                        <div className="pt-3 border-t border-gray-100 dark:border-gray-700 grid grid-cols-2 gap-4 mb-3">
                                             <div>
-                                                <p className="text-gray-400 font-semibold text-[10px] uppercase tracking-wide mb-0.5">Orçamento</p>
-                                                <p className="font-bold text-gray-700 text-base">
+                                                <p className="text-gray-400 dark:text-gray-500 font-semibold text-[10px] uppercase tracking-wide mb-0.5">Orçamento</p>
+                                                <p className="font-bold text-gray-700 dark:text-gray-200 text-base">
                                                     {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(event.budget)}
                                                 </p>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-gray-400 font-semibold text-[10px] uppercase tracking-wide mb-0.5">Saldo</p>
+                                                <p className="text-gray-400 dark:text-gray-500 font-semibold text-[10px] uppercase tracking-wide mb-0.5">Saldo</p>
                                                 <p className={`font-bold text-base ${(event.budget - (event.transactions || [])
                                                     .filter(t => t.type === 'EXPENSE')
                                                     .reduce((acc, t) => acc + t.amount, 0)) >= 0 ? 'text-green-600' : 'text-red-600'
@@ -215,7 +215,7 @@ const Carousel = ({ items }: { items: Event[] }) => {
                                         </div>
                                     )}
 
-                                    <div className="flex justify-between items-center pt-2 border-t border-gray-50">
+                                    <div className="flex justify-between items-center pt-2 border-t border-gray-50 dark:border-gray-700">
                                         <span className={`text-[10px] font-semibold px-2.5 py-0.5 rounded border ${timeStatusColor} bg-opacity-50 uppercase tracking-wide flex items-center gap-1`}>
                                             <TimeIcon size={12} />
                                             {timeStatusLabel}
@@ -737,7 +737,7 @@ const Dashboard: FC = () => {
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition duration-300 flex flex-col">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition duration-300 flex flex-col">
                         <div className="bg-gradient-to-r from-green-500 to-green-700 rounded-t-lg p-4 flex items-center justify-center">
                             <h3 className="text-lg font-bold text-white text-center shadow-sm">Despesas</h3>
                         </div>
@@ -774,7 +774,7 @@ const Dashboard: FC = () => {
                                 </ResponsiveContainer>
                                 {/* Central Total */}
                                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                                    <span className="text-4xl font-bold text-gray-800">
+                                    <span className="text-4xl font-bold text-gray-800 dark:text-white">
                                         {(() => {
                                             const total = cleanExpensesChartData.reduce((acc, curr) => acc + curr.value, 0);
                                             if (total >= 1000000) return `${(total / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
@@ -782,8 +782,8 @@ const Dashboard: FC = () => {
                                             return new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 }).format(total);
                                         })()}
                                     </span>
-                                    <span className="text-xs text-gray-500 uppercase tracking-wide mb-0.5">Total</span>
-                                    <span className="text-[10px] text-gray-400 font-medium bg-gray-50 px-1.5 py-0.5 rounded-full">
+                                    <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-0.5">Total</span>
+                                    <span className="text-[10px] text-gray-400 dark:text-gray-300 font-medium bg-gray-50 dark:bg-gray-700 px-1.5 py-0.5 rounded-full">
                                         {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(cleanExpensesChartData.reduce((acc, curr) => acc + curr.value, 0))}
                                     </span>
                                 </div>
@@ -791,15 +791,15 @@ const Dashboard: FC = () => {
 
                             {/* Custom Legend */}
                             <div className="w-1/2 pl-4 flex flex-col justify-center gap-3">
-                                <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1 border-b pb-1">Unidades</h4>
+                                <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 border-b dark:border-gray-700 pb-1">Unidades</h4>
                                 <div className="max-h-56 overflow-y-auto custom-scrollbar pr-2">
                                     {cleanExpensesChartData.map((entry, index) => (
                                         <div key={`legend-${index}`} className="flex items-center justify-between text-sm py-1">
                                             <div className="flex items-center gap-2">
                                                 <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
-                                                <span className="text-gray-700 font-medium">{entry.name}</span>
+                                                <span className="text-gray-700 dark:text-gray-200 font-medium">{entry.name}</span>
                                             </div>
-                                            <span className="text-gray-900 font-bold">
+                                            <span className="text-gray-900 dark:text-white font-bold">
                                                 {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(entry.value)}
                                             </span>
                                         </div>
@@ -825,7 +825,7 @@ const Dashboard: FC = () => {
                                 <Carousel items={filteredEvents} />
                             </div>
                         ) : (
-                            <div className="bg-white p-8 rounded shadow-sm text-center text-gray-500 border border-dashed border-gray-300">
+                            <div className="bg-white dark:bg-gray-800 p-8 rounded shadow-sm text-center text-gray-500 dark:text-gray-400 border border-dashed border-gray-300 dark:border-gray-700">
                                 <p>Nenhum evento encontrado para o período selecionado.</p>
                                 <Link to="/events/new" className="text-blue-500 hover:underline mt-2 inline-block">Cadastrar novo evento</Link>
                             </div>
@@ -834,55 +834,55 @@ const Dashboard: FC = () => {
                 </div >
 
                 <div className="mt-8 grid gap-6 md:grid-cols-2">
-                    <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition duration-300 flex overflow-hidden">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition duration-300 flex overflow-hidden">
                         <div className="bg-blue-600 w-24 flex items-center justify-center shrink-0">
                             <Calendar className="w-10 h-10 text-white" />
                         </div>
                         <div className="p-6 flex-1">
-                            <h2 className="text-xl font-semibold mb-2 text-gray-800">Eventos</h2>
-                            <p className="text-gray-600 mb-4">Gerencie todos os seus eventos.</p>
-                            <Link to="/events" className="inline-block text-blue-600 font-medium hover:text-blue-800 transition">Ver Eventos &rarr;</Link>
+                            <h2 className="text-xl font-semibold mb-2 text-gray-800 dark:text-white">Eventos</h2>
+                            <p className="text-gray-600 dark:text-gray-300 mb-4">Gerencie todos os seus eventos.</p>
+                            <Link to="/events" className="inline-block text-blue-600 dark:text-blue-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition">Ver Eventos &rarr;</Link>
                         </div>
                     </div>
-                    <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition duration-300 flex overflow-hidden">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition duration-300 flex overflow-hidden">
                         <div className="bg-green-600 w-24 flex items-center justify-center shrink-0">
                             <PlusCircle className="w-10 h-10 text-white" />
                         </div>
                         <div className="p-6 flex-1">
-                            <h2 className="text-xl font-semibold mb-2 text-gray-800">Novo Evento</h2>
-                            <p className="text-gray-600 mb-4">Comece a organizar um novo evento agora.</p>
-                            <Link to="/events/new" className="inline-block text-green-600 font-medium hover:text-green-800 transition">Criar Evento &rarr;</Link>
+                            <h2 className="text-xl font-semibold mb-2 text-gray-800 dark:text-white">Novo Evento</h2>
+                            <p className="text-gray-600 dark:text-gray-300 mb-4">Comece a organizar um novo evento agora.</p>
+                            <Link to="/events/new" className="inline-block text-green-600 dark:text-green-400 font-medium hover:text-green-800 dark:hover:text-green-300 transition">Criar Evento &rarr;</Link>
                         </div>
                     </div>
 
                     {user?.role === 'MASTER' && (
-                        <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition duration-300 flex overflow-hidden">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition duration-300 flex overflow-hidden">
                             <div className="bg-purple-600 w-24 flex items-center justify-center shrink-0">
                                 <Users className="w-10 h-10 text-white" />
                             </div>
                             <div className="p-6 flex-1">
-                                <h2 className="text-xl font-semibold mb-2 text-gray-800">Usuários</h2>
-                                <p className="text-gray-600 mb-4">Gerencie os usuários do sistema e suas unidades.</p>
-                                <Link to="/users" className="inline-block text-purple-600 font-medium hover:text-purple-800 transition">Gerenciar Usuários &rarr;</Link>
+                                <h2 className="text-xl font-semibold mb-2 text-gray-800 dark:text-white">Usuários</h2>
+                                <p className="text-gray-600 dark:text-gray-300 mb-4">Gerencie os usuários do sistema e suas unidades.</p>
+                                <Link to="/users" className="inline-block text-purple-600 dark:text-purple-400 font-medium hover:text-purple-800 dark:hover:text-purple-300 transition">Gerenciar Usuários &rarr;</Link>
                             </div>
                         </div>
                     )}
 
                     {user?.role === 'MASTER' && (
-                        <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition duration-300 flex overflow-hidden">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition duration-300 flex overflow-hidden">
                             <div className="bg-orange-600 w-24 flex items-center justify-center shrink-0">
                                 <Building2 className="w-10 h-10 text-white" />
                             </div>
                             <div className="p-6 flex-1">
-                                <h2 className="text-xl font-semibold mb-2 text-gray-800">Unidades</h2>
-                                <p className="text-gray-600 mb-4">Gerencie as unidades (UMC, SEBRAE/SP, etc).</p>
-                                <Link to="/units" className="inline-block text-orange-600 font-medium hover:text-orange-800 transition">Gerenciar Unidades &rarr;</Link>
+                                <h2 className="text-xl font-semibold mb-2 text-gray-800 dark:text-white">Unidades</h2>
+                                <p className="text-gray-600 dark:text-gray-300 mb-4">Gerencie as unidades (UMC, SEBRAE/SP, etc).</p>
+                                <Link to="/units" className="inline-block text-orange-600 dark:text-orange-400 font-medium hover:text-orange-800 dark:hover:text-orange-300 transition">Gerenciar Unidades &rarr;</Link>
                             </div>
                         </div>
                     )}
                 </div>
             </div >
-        </div>
+        </div >
     );
 };
 
