@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { Calendar, PlusCircle, Users, Building2, PlayCircle, CheckCircle, XCircle, Clock, PauseCircle } from 'lucide-react';
 import { ThemeToggle } from '../components/ThemeToggle';
+import { WhatsAppButton } from '../components/WhatsAppButton';
 import { useTheme } from '../contexts/ThemeContext';
 
 interface Unit {
@@ -881,6 +882,7 @@ const Dashboard: FC = () => {
                     )}
                 </div>
             </div >
+            <WhatsAppButton />
         </div >
     );
 };
