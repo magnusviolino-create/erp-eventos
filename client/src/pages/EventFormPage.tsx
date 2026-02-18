@@ -2,6 +2,7 @@ import { useState, useEffect, type FormEvent, type FC } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../services/api';
 import { useNavigate, useParams } from 'react-router-dom';
+import { ThemeToggle } from '../components/ThemeToggle';
 
 const EventFormPage: FC = () => {
     const { user } = useAuth();
@@ -108,132 +109,135 @@ const EventFormPage: FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 p-4 md:p-8 flex justify-center">
-            <div className="bg-white p-8 rounded shadow-md w-full max-w-lg">
-                <h1 className="text-2xl font-bold mb-6 text-gray-800">{isEditing ? 'Editar Evento' : 'Novo Evento'}</h1>
-                {error && <p className="text-red-500 mb-4">{error}</p>}
+        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4 md:p-8 flex justify-center transition-colors duration-300">
+            <div className="bg-white dark:bg-gray-800 p-8 rounded shadow-md w-full max-w-lg transition-colors duration-300">
+                <div className="flex justify-between items-center mb-6">
+                    <h1 className="text-2xl font-bold text-gray-800 dark:text-white">{isEditing ? 'Editar Evento' : 'Novo Evento'}</h1>
+                    <ThemeToggle />
+                </div>
+                {error && <p className="text-red-500 dark:text-red-400 mb-4">{error}</p>}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium mb-1 text-gray-700">Nome do Evento</label>
+                        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Nome do Evento</label>
                         <input
                             type="text"
                             value={name}
                             onChange={e => setName(e.target.value)}
-                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors duration-200"
                             required
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium mb-1 text-gray-700">Código do Evento</label>
+                        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Código do Evento</label>
                         <input
                             type="text"
                             value={eventCode}
                             onChange={e => setEventCode(e.target.value)}
                             placeholder="Código FOCO"
-                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white dark:placeholder-gray-400 transition-colors duration-200"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium mb-1 text-gray-700">Projeto</label>
+                        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Projeto</label>
                         <input
                             type="text"
                             value={project}
                             onChange={e => setProject(e.target.value)}
-                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors duration-200"
                             required
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium mb-1 text-gray-700">Ação</label>
+                        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Ação</label>
                         <input
                             type="text"
                             value={action}
                             onChange={e => setAction(e.target.value)}
-                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors duration-200"
                             required
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium mb-1 text-gray-700">Unidade</label>
+                        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Unidade</label>
                         <input
                             type="text"
                             value={responsibleUnit}
                             onChange={e => setResponsibleUnit(e.target.value)}
-                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors duration-200"
                             required
                         />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium mb-1 text-gray-700">Email do Responsável</label>
+                            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Email do Responsável</label>
                             <input
                                 type="email"
                                 value={responsibleEmail}
                                 onChange={e => setResponsibleEmail(e.target.value)}
-                                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors duration-200"
                                 required
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium mb-1 text-gray-700">Telefone do Responsável</label>
+                            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Telefone do Responsável</label>
                             <input
                                 type="tel"
                                 value={responsiblePhone}
                                 onChange={e => setResponsiblePhone(e.target.value)}
-                                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors duration-200"
                                 required
                             />
                         </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium mb-1 text-gray-700">Início do Evento</label>
+                            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Início do Evento</label>
                             <input
                                 type="datetime-local"
                                 value={startDate}
                                 onChange={e => setStartDate(e.target.value)}
-                                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors duration-200"
                                 required
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium mb-1 text-gray-700">Término do Evento</label>
+                            <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Término do Evento</label>
                             <input
                                 type="datetime-local"
                                 value={endDate}
                                 onChange={e => setEndDate(e.target.value)}
-                                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors duration-200"
                                 required
                             />
                         </div>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium mb-1 text-gray-700">Local</label>
+                        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Local</label>
                         <input
                             type="text"
                             value={location}
                             onChange={e => setLocation(e.target.value)}
-                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors duration-200"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium mb-1 text-gray-700">Descrição</label>
+                        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Descrição</label>
                         <textarea
                             value={description}
                             onChange={e => setDescription(e.target.value)}
-                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none h-24"
+                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white transition-colors duration-200 h-24"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium mb-1 text-gray-700">Orçamento (R$)</label>
+                        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Orçamento (R$)</label>
                         <input
                             type="text"
                             placeholder="R$ 0,00"
                             value={budget}
                             onChange={handleBudgetChange}
-                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white dark:placeholder-gray-400 transition-colors duration-200"
                         />
                     </div>
 
@@ -247,7 +251,7 @@ const EventFormPage: FC = () => {
                         <button
                             type="button"
                             onClick={() => navigate('/events')}
-                            className="flex-1 bg-gray-300 text-gray-800 py-2 rounded hover:bg-gray-400 transition"
+                            className="flex-1 bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white py-2 rounded hover:bg-gray-400 dark:hover:bg-gray-500 transition"
                         >
                             Cancelar
                         </button>
