@@ -5,6 +5,8 @@ import type { Event } from '../types/Event';
 import { Link } from 'react-router-dom';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { Calendar, PlusCircle, Users, Building2, PlayCircle, CheckCircle, XCircle, Clock, PauseCircle } from 'lucide-react';
+import { ThemeToggle } from '../components/ThemeToggle';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface Unit {
     id: string;
@@ -256,6 +258,8 @@ const Carousel = ({ items }: { items: Event[] }) => {
 
 const Dashboard: FC = () => {
     const { user, signOut } = useContext(AuthContext);
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
     const [events, setEvents] = useState<Event[]>([]);
     const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
     const [units, setUnits] = useState<Unit[]>([]);
@@ -470,12 +474,13 @@ const Dashboard: FC = () => {
     const years = Array.from({ length: 5 }, (_, i) => String(currentYear - 2 + i));
 
     return (
-        <div className="min-h-screen bg-gray-100 p-4 md:p-8">
-            <div className="bg-white p-4 md:p-6 rounded shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
-                <h1 className="text-2xl font-bold text-gray-800">Painel Geral</h1>
+        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4 md:p-8 transition-colors duration-300">
+            <div className="bg-white dark:bg-gray-800 p-4 md:p-6 rounded shadow-md flex flex-col md:flex-row justify-between items-center gap-4 transition-colors duration-300">
+                <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Painel Geral</h1>
                 <div className="flex items-center gap-4">
-                    <span className="text-gray-600">Olá, <strong>{user?.name}</strong></span>
-                    <Link to="/profile" className="text-blue-600 hover:underline text-sm mr-4">Meu Perfil</Link>
+                    <ThemeToggle />
+                    <span className="text-gray-600 dark:text-gray-300">Olá, <strong>{user?.name}</strong></span>
+                    <Link to="/profile" className="text-blue-600 dark:text-blue-400 hover:underline text-sm mr-4">Meu Perfil</Link>
                     <button onClick={signOut} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200">
                         Sair
                     </button>
@@ -483,8 +488,8 @@ const Dashboard: FC = () => {
             </div>
 
             {/* Advanced Dashboard Controls */}
-            <div className="mt-8 bg-white p-6 rounded-lg shadow-sm flex flex-col gap-4">
-                <h2 className="text-lg font-semibold text-gray-700 mb-2">Filtros do Dashboard</h2>
+            <div className="mt-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm flex flex-col gap-4 transition-colors duration-300">
+                <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">Filtros do Dashboard</h2>
 
                 {/* Search and Clear Row */}
                 <div className="flex gap-2">
@@ -498,7 +503,7 @@ const Dashboard: FC = () => {
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             onKeyDown={handleKeyDown}
-                            className="pl-10 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                            className="pl-10 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         />
                     </div>
                     <button
@@ -509,7 +514,7 @@ const Dashboard: FC = () => {
                     </button>
                     <button
                         onClick={handleClear}
-                        className="px-4 py-2 text-sm text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300 transition whitespace-nowrap"
+                        className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition whitespace-nowrap"
                         title="Limpar Filtros"
                     >
                         Limpar
@@ -520,7 +525,7 @@ const Dashboard: FC = () => {
                 <div className="w-full">
                     <button
                         onClick={() => setShowFilters(!showFilters)}
-                        className="text-blue-600 text-sm font-medium hover:underline mb-4 flex items-center gap-1"
+                        className="text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline mb-4 flex items-center gap-1"
                     >
                         {showFilters ? 'Ocultar Filtros' : 'Mais Filtros'}
                         <span className="text-xs">{showFilters ? '▲' : '▼'}</span>
@@ -532,11 +537,11 @@ const Dashboard: FC = () => {
                                 {/* Unit Filter (MASTER only) */}
                                 {user?.role === 'MASTER' && (
                                     <div className="flex flex-col">
-                                        <label className="text-sm font-medium text-gray-600 mb-1">Unidade</label>
+                                        <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Unidade</label>
                                         <select
                                             value={selectedUnit}
                                             onChange={(e) => setSelectedUnit(e.target.value)}
-                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-48 p-2.5"
+                                            className="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-48 p-2.5"
                                         >
                                             <option value="all">Todas as Unidades</option>
                                             {units.map((u) => (
@@ -549,12 +554,13 @@ const Dashboard: FC = () => {
 
                                 )}
                                 <div className="flex flex-col">
-                                    <label className="text-sm font-medium text-gray-600 mb-1">Status</label>
+                                    <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Status</label>
                                     <select
                                         value={selectedStatus}
-                                        onChange={(e) => setSelectedStatus(e.target.value as StatusFilter)}
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-40 p-2.5"
+                                        onChange={(e) => setSelectedStatus(e.target.value as any)}
+                                        className="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-40 p-2.5"
                                     >
+
                                         <option value="all">Todos</option>
                                         <option value="OPEN">Aberto</option>
                                         <option value="IN_PROGRESS">Em Atendimento</option>
@@ -564,11 +570,11 @@ const Dashboard: FC = () => {
                                     </select>
                                 </div>
                                 <div className="flex flex-col">
-                                    <label className="text-sm font-medium text-gray-600 mb-1">Mês</label>
+                                    <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Mês</label>
                                     <select
                                         value={selectedMonth}
                                         onChange={(e) => setSelectedMonth(e.target.value)}
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-40 p-2.5"
+                                        className="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-40 p-2.5"
                                     >
                                         {months.map((m) => (
                                             <option key={m.value} value={m.value}>
@@ -578,12 +584,13 @@ const Dashboard: FC = () => {
                                     </select>
                                 </div>
                                 <div className="flex flex-col">
-                                    <label className="text-sm font-medium text-gray-600 mb-1">Ano</label>
+                                    <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Ano</label>
                                     <select
                                         value={selectedYear}
                                         onChange={(e) => setSelectedYear(e.target.value)}
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24 p-2.5"
+                                        className="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24 p-2.5"
                                     >
+                                        <option value="all">Todos os Anos</option>
                                         {years.map((y) => (
                                             <option key={y} value={y}>
                                                 {y}
@@ -594,14 +601,14 @@ const Dashboard: FC = () => {
                             </div>
 
                             {/* Advanced Filters Row */}
-                            <div className="flex flex-wrap gap-4 items-end pt-2 border-t border-gray-100 w-full">
+                            <div className="flex flex-wrap gap-4 items-end pt-2 border-t border-gray-100 dark:border-gray-700 w-full">
                                 {/* Sort By */}
                                 <div className="flex flex-col">
-                                    <label className="text-sm font-medium text-gray-600 mb-1">Ordenar por</label>
+                                    <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Ordenar por</label>
                                     <select
                                         value={sortBy}
                                         onChange={(e) => setSortBy(e.target.value)}
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-40 p-2.5"
+                                        className="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-40 p-2.5"
                                     >
                                         <option value="name-asc">Nome (A-Z)</option>
                                         <option value="name-desc">Nome (Z-A)</option>
@@ -616,7 +623,7 @@ const Dashboard: FC = () => {
 
                                 {/* Budget Range */}
                                 <div className="flex flex-col flex-1 min-w-[300px]">
-                                    <label className="text-sm font-medium text-gray-600 mb-1">Faixa de Orçamento</label>
+                                    <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Faixa de Orçamento</label>
                                     <div className="flex items-center gap-2">
                                         <div className="relative w-full">
                                             <input
@@ -629,9 +636,9 @@ const Dashboard: FC = () => {
                                                     setMaxBudget(val);
                                                     setMaxBudgetInput(val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
                                                 }}
-                                                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                                className="w-full h-2 bg-gray-200 dark:bg-gray-600 rounded-lg appearance-none cursor-pointer"
                                             />
-                                            <div className="flex justify-between text-xs text-gray-500 mt-1">
+                                            <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
                                                 <span>0</span>
                                                 <span>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(maxBudgetLimit)}</span>
                                             </div>
@@ -642,7 +649,7 @@ const Dashboard: FC = () => {
                                                 placeholder="Mín"
                                                 value={minBudgetInput}
                                                 onChange={handleMinBudgetChange}
-                                                className="w-24 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2"
+                                                className="w-24 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2"
                                             />
                                             <span className="text-gray-400">-</span>
                                             <input
@@ -650,14 +657,15 @@ const Dashboard: FC = () => {
                                                 placeholder="Máx"
                                                 value={maxBudgetInput}
                                                 onChange={handleMaxBudgetChange}
-                                                className="w-28 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2"
+                                                className="w-28 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2"
                                             />
                                         </div>
                                     </div>
                                 </div>
+
                                 <button
                                     onClick={filterEvents}
-                                    className="px-6 py-2.5 text-sm font-bold text-white bg-green-600 rounded-lg hover:bg-green-700 transition check-shadow shadow-md hover:shadow-lg mb-1 h-fit"
+                                    className="px-6 py-2.5 text-sm font-bold text-white bg-green-600 rounded-lg hover:bg-green-700 transition check-shadow shadow-md hover:shadow-lg mb-1"
                                 >
                                     APLICAR FILTROS
                                 </button>
@@ -665,201 +673,216 @@ const Dashboard: FC = () => {
                         </div>
                     )}
                 </div>
-            </div>
 
-            {/* Charts Section */}
-            <div className="mt-8 grid gap-6 md:grid-cols-2">
-                <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition duration-300 flex flex-col">
-                    <div className="bg-gradient-to-r from-blue-500 to-blue-700 rounded-t-lg p-4 flex items-center justify-center">
-                        <h3 className="text-lg font-bold text-white text-center shadow-sm">Eventos Realizados</h3>
-                    </div>
-                    <div className="p-6 h-96 flex items-center justify-between relative">
-                        {/* Chart with Central Label */}
-                        <div className="relative w-1/2 h-full">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <PieChart>
-                                    <Pie
-                                        data={eventsChartData}
-                                        cx="50%"
-                                        cy="50%"
-                                        innerRadius="60%"
-                                        outerRadius="80%"
-                                        paddingAngle={5}
-                                        dataKey="value"
-                                    >
-                                        {eventsChartData.map((_entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="none" />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip
-                                        formatter={(value: number | undefined) => [`${value ?? 0} Eventos`, 'Quantidade'] as [string, string]}
-                                        contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                                    />
-                                </PieChart>
-                            </ResponsiveContainer>
-                            {/* Central Total */}
-                            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                                <span className="text-4xl font-bold text-gray-800">{eventsChartData.reduce((acc, curr) => acc + curr.value, 0)}</span>
-                                <span className="text-sm text-gray-500 uppercase tracking-wide">Total</span>
-                            </div>
+                {/* Charts Section */}
+                <div className="mt-8 grid gap-6 md:grid-cols-2">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition duration-300 flex flex-col">
+                        <div className="bg-gradient-to-r from-blue-500 to-blue-700 rounded-t-lg p-4 flex items-center justify-center">
+                            <h3 className="text-lg font-bold text-white text-center shadow-sm">Eventos Realizados</h3>
                         </div>
+                        <div className="p-6 h-96 flex items-center justify-between relative">
+                            {/* Chart with Central Label */}
+                            <div className="relative w-1/2 h-full">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <PieChart>
+                                        <Pie
+                                            data={eventsChartData}
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius="60%"
+                                            outerRadius="80%"
+                                            paddingAngle={5}
+                                            dataKey="value"
+                                            stroke="none"
+                                        >
+                                            {eventsChartData.map((_entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip
+                                            formatter={(value: number | undefined) => [`${value ?? 0} Eventos`, 'Quantidade'] as [string, string]}
+                                            contentStyle={{
+                                                backgroundColor: isDark ? '#1f2937' : '#fff',
+                                                borderRadius: '8px',
+                                                border: 'none',
+                                                boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                                                color: isDark ? '#f3f4f6' : '#1f2937'
+                                            }}
+                                            itemStyle={{ color: isDark ? '#f3f4f6' : '#1f2937' }}
+                                        />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                                {/* Central Total */}
+                                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                    <span className="text-4xl font-bold text-gray-800 dark:text-white">{eventsChartData.reduce((acc, curr) => acc + curr.value, 0)}</span>
+                                    <span className="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wide">Total</span>
+                                </div>
+                            </div>
 
-                        {/* Custom Legend */}
-                        <div className="w-1/2 pl-4 flex flex-col justify-center gap-3">
-                            <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1 border-b pb-1">Unidades</h4>
-                            <div className="max-h-56 overflow-y-auto custom-scrollbar pr-2">
-                                {eventsChartData.map((entry, index) => (
-                                    <div key={`legend-${index}`} className="flex items-center justify-between text-sm py-1">
-                                        <div className="flex items-center gap-2">
-                                            <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
-                                            <span className="text-gray-700 font-medium">{entry.name}</span>
+// ... (Legend)
+                            <div className="w-1/2 pl-4 flex flex-col justify-center gap-3">
+                                <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 border-b dark:border-gray-700 pb-1">Unidades</h4>
+                                <div className="max-h-56 overflow-y-auto custom-scrollbar pr-2">
+                                    {eventsChartData.map((entry, index) => (
+                                        <div key={`legend-${index}`} className="flex items-center justify-between text-sm py-1">
+                                            <div className="flex items-center gap-2">
+                                                <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
+                                                <span className="text-gray-700 dark:text-gray-200 font-medium">{entry.name}</span>
+                                            </div>
+                                            <span className="text-gray-900 dark:text-white font-bold">{entry.value}</span>
                                         </div>
-                                        <span className="text-gray-900 font-bold">{entry.value}</span>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition duration-300 flex flex-col">
-                    <div className="bg-gradient-to-r from-green-500 to-green-700 rounded-t-lg p-4 flex items-center justify-center">
-                        <h3 className="text-lg font-bold text-white text-center shadow-sm">Despesas</h3>
-                    </div>
-                    <div className="p-6 h-96 flex items-center justify-between relative">
-                        {/* Chart with Central Label */}
-                        <div className="relative w-1/2 h-full">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <PieChart>
-                                    <Pie
-                                        data={cleanExpensesChartData}
-                                        cx="50%"
-                                        cy="50%"
-                                        innerRadius="60%"
-                                        outerRadius="80%"
-                                        paddingAngle={5}
-                                        dataKey="value"
-                                    >
-                                        {cleanExpensesChartData.map((_entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="none" />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip
-                                        formatter={(value: number | undefined) => [new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value ?? 0), 'Valor Gasto'] as [string, string]}
-                                        contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                                    />
-                                </PieChart>
-                            </ResponsiveContainer>
-                            {/* Central Total */}
-                            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                                <span className="text-4xl font-bold text-gray-800">
-                                    {(() => {
-                                        const total = cleanExpensesChartData.reduce((acc, curr) => acc + curr.value, 0);
-                                        if (total >= 1000000) return `${(total / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
-                                        if (total >= 1000) return `${(total / 1000).toFixed(1).replace(/\.0$/, '')}k`;
-                                        return new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 }).format(total);
-                                    })()}
-                                </span>
-                                <span className="text-xs text-gray-500 uppercase tracking-wide mb-0.5">Total</span>
-                                <span className="text-[10px] text-gray-400 font-medium bg-gray-50 px-1.5 py-0.5 rounded-full">
-                                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(cleanExpensesChartData.reduce((acc, curr) => acc + curr.value, 0))}
-                                </span>
-                            </div>
+                    <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition duration-300 flex flex-col">
+                        <div className="bg-gradient-to-r from-green-500 to-green-700 rounded-t-lg p-4 flex items-center justify-center">
+                            <h3 className="text-lg font-bold text-white text-center shadow-sm">Despesas</h3>
                         </div>
+                        <div className="p-6 h-96 flex items-center justify-between relative">
+                            {/* Chart with Central Label */}
+                            <div className="relative w-1/2 h-full">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <PieChart>
+                                        <Pie
+                                            data={cleanExpensesChartData}
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius="60%"
+                                            outerRadius="80%"
+                                            paddingAngle={5}
+                                            dataKey="value"
+                                        >
+                                            {cleanExpensesChartData.map((_entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="none" />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip
+                                            formatter={(value: number | undefined) => [new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value ?? 0), 'Valor Gasto'] as [string, string]}
+                                            contentStyle={{
+                                                backgroundColor: isDark ? '#1f2937' : '#fff',
+                                                borderRadius: '8px',
+                                                border: 'none',
+                                                boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                                                color: isDark ? '#f3f4f6' : '#1f2937'
+                                            }}
+                                            itemStyle={{ color: isDark ? '#f3f4f6' : '#1f2937' }}
+                                        />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                                {/* Central Total */}
+                                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                    <span className="text-4xl font-bold text-gray-800">
+                                        {(() => {
+                                            const total = cleanExpensesChartData.reduce((acc, curr) => acc + curr.value, 0);
+                                            if (total >= 1000000) return `${(total / 1000000).toFixed(1).replace(/\.0$/, '')}M`;
+                                            if (total >= 1000) return `${(total / 1000).toFixed(1).replace(/\.0$/, '')}k`;
+                                            return new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 }).format(total);
+                                        })()}
+                                    </span>
+                                    <span className="text-xs text-gray-500 uppercase tracking-wide mb-0.5">Total</span>
+                                    <span className="text-[10px] text-gray-400 font-medium bg-gray-50 px-1.5 py-0.5 rounded-full">
+                                        {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(cleanExpensesChartData.reduce((acc, curr) => acc + curr.value, 0))}
+                                    </span>
+                                </div>
+                            </div>
 
-                        {/* Custom Legend */}
-                        <div className="w-1/2 pl-4 flex flex-col justify-center gap-3">
-                            <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1 border-b pb-1">Unidades</h4>
-                            <div className="max-h-56 overflow-y-auto custom-scrollbar pr-2">
-                                {cleanExpensesChartData.map((entry, index) => (
-                                    <div key={`legend-${index}`} className="flex items-center justify-between text-sm py-1">
-                                        <div className="flex items-center gap-2">
-                                            <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
-                                            <span className="text-gray-700 font-medium">{entry.name}</span>
+                            {/* Custom Legend */}
+                            <div className="w-1/2 pl-4 flex flex-col justify-center gap-3">
+                                <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1 border-b pb-1">Unidades</h4>
+                                <div className="max-h-56 overflow-y-auto custom-scrollbar pr-2">
+                                    {cleanExpensesChartData.map((entry, index) => (
+                                        <div key={`legend-${index}`} className="flex items-center justify-between text-sm py-1">
+                                            <div className="flex items-center gap-2">
+                                                <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
+                                                <span className="text-gray-700 font-medium">{entry.name}</span>
+                                            </div>
+                                            <span className="text-gray-900 font-bold">
+                                                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(entry.value)}
+                                            </span>
                                         </div>
-                                        <span className="text-gray-900 font-bold">
-                                            {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(entry.value)}
-                                        </span>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Agenda / Highlights Section */}
-            <div className="mt-8 relative group" >
-                <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-4 gap-4">
-                    <h2 className="text-xl font-bold text-gray-800 border-l-4 border-blue-600 pl-3">
-                        Agenda de Destaques
-                    </h2>
+                {/* Agenda / Highlights Section */}
+                <div className="mt-8 relative group" >
+                    <div className="flex flex-col md:flex-row justify-between items-end md:items-center mb-4 gap-4">
+                        <h2 className="text-xl font-bold text-gray-800 border-l-4 border-blue-600 pl-3">
+                            Agenda de Destaques
+                        </h2>
+                    </div>
+
+                    {
+                        filteredEvents.length > 0 ? (
+                            <div className="relative">
+                                {/* Carousel Container */}
+                                <Carousel items={filteredEvents} />
+                            </div>
+                        ) : (
+                            <div className="bg-white p-8 rounded shadow-sm text-center text-gray-500 border border-dashed border-gray-300">
+                                <p>Nenhum evento encontrado para o período selecionado.</p>
+                                <Link to="/events/new" className="text-blue-500 hover:underline mt-2 inline-block">Cadastrar novo evento</Link>
+                            </div>
+                        )
+                    }
+                </div >
+
+                <div className="mt-8 grid gap-6 md:grid-cols-2">
+                    <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition duration-300 flex overflow-hidden">
+                        <div className="bg-blue-600 w-24 flex items-center justify-center shrink-0">
+                            <Calendar className="w-10 h-10 text-white" />
+                        </div>
+                        <div className="p-6 flex-1">
+                            <h2 className="text-xl font-semibold mb-2 text-gray-800">Eventos</h2>
+                            <p className="text-gray-600 mb-4">Gerencie todos os seus eventos.</p>
+                            <Link to="/events" className="inline-block text-blue-600 font-medium hover:text-blue-800 transition">Ver Eventos &rarr;</Link>
+                        </div>
+                    </div>
+                    <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition duration-300 flex overflow-hidden">
+                        <div className="bg-green-600 w-24 flex items-center justify-center shrink-0">
+                            <PlusCircle className="w-10 h-10 text-white" />
+                        </div>
+                        <div className="p-6 flex-1">
+                            <h2 className="text-xl font-semibold mb-2 text-gray-800">Novo Evento</h2>
+                            <p className="text-gray-600 mb-4">Comece a organizar um novo evento agora.</p>
+                            <Link to="/events/new" className="inline-block text-green-600 font-medium hover:text-green-800 transition">Criar Evento &rarr;</Link>
+                        </div>
+                    </div>
+
+                    {user?.role === 'MASTER' && (
+                        <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition duration-300 flex overflow-hidden">
+                            <div className="bg-purple-600 w-24 flex items-center justify-center shrink-0">
+                                <Users className="w-10 h-10 text-white" />
+                            </div>
+                            <div className="p-6 flex-1">
+                                <h2 className="text-xl font-semibold mb-2 text-gray-800">Usuários</h2>
+                                <p className="text-gray-600 mb-4">Gerencie os usuários do sistema e suas unidades.</p>
+                                <Link to="/users" className="inline-block text-purple-600 font-medium hover:text-purple-800 transition">Gerenciar Usuários &rarr;</Link>
+                            </div>
+                        </div>
+                    )}
+
+                    {user?.role === 'MASTER' && (
+                        <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition duration-300 flex overflow-hidden">
+                            <div className="bg-orange-600 w-24 flex items-center justify-center shrink-0">
+                                <Building2 className="w-10 h-10 text-white" />
+                            </div>
+                            <div className="p-6 flex-1">
+                                <h2 className="text-xl font-semibold mb-2 text-gray-800">Unidades</h2>
+                                <p className="text-gray-600 mb-4">Gerencie as unidades (UMC, SEBRAE/SP, etc).</p>
+                                <Link to="/units" className="inline-block text-orange-600 font-medium hover:text-orange-800 transition">Gerenciar Unidades &rarr;</Link>
+                            </div>
+                        </div>
+                    )}
                 </div>
-
-                {
-                    filteredEvents.length > 0 ? (
-                        <div className="relative">
-                            {/* Carousel Container */}
-                            <Carousel items={filteredEvents} />
-                        </div>
-                    ) : (
-                        <div className="bg-white p-8 rounded shadow-sm text-center text-gray-500 border border-dashed border-gray-300">
-                            <p>Nenhum evento encontrado para o período selecionado.</p>
-                            <Link to="/events/new" className="text-blue-500 hover:underline mt-2 inline-block">Cadastrar novo evento</Link>
-                        </div>
-                    )
-                }
             </div >
-
-            <div className="mt-8 grid gap-6 md:grid-cols-2">
-                <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition duration-300 flex overflow-hidden">
-                    <div className="bg-blue-600 w-24 flex items-center justify-center shrink-0">
-                        <Calendar className="w-10 h-10 text-white" />
-                    </div>
-                    <div className="p-6 flex-1">
-                        <h2 className="text-xl font-semibold mb-2 text-gray-800">Eventos</h2>
-                        <p className="text-gray-600 mb-4">Gerencie todos os seus eventos.</p>
-                        <Link to="/events" className="inline-block text-blue-600 font-medium hover:text-blue-800 transition">Ver Eventos &rarr;</Link>
-                    </div>
-                </div>
-                <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition duration-300 flex overflow-hidden">
-                    <div className="bg-green-600 w-24 flex items-center justify-center shrink-0">
-                        <PlusCircle className="w-10 h-10 text-white" />
-                    </div>
-                    <div className="p-6 flex-1">
-                        <h2 className="text-xl font-semibold mb-2 text-gray-800">Novo Evento</h2>
-                        <p className="text-gray-600 mb-4">Comece a organizar um novo evento agora.</p>
-                        <Link to="/events/new" className="inline-block text-green-600 font-medium hover:text-green-800 transition">Criar Evento &rarr;</Link>
-                    </div>
-                </div>
-
-                {user?.role === 'MASTER' && (
-                    <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition duration-300 flex overflow-hidden">
-                        <div className="bg-purple-600 w-24 flex items-center justify-center shrink-0">
-                            <Users className="w-10 h-10 text-white" />
-                        </div>
-                        <div className="p-6 flex-1">
-                            <h2 className="text-xl font-semibold mb-2 text-gray-800">Usuários</h2>
-                            <p className="text-gray-600 mb-4">Gerencie os usuários do sistema e suas unidades.</p>
-                            <Link to="/users" className="inline-block text-purple-600 font-medium hover:text-purple-800 transition">Gerenciar Usuários &rarr;</Link>
-                        </div>
-                    </div>
-                )}
-
-                {user?.role === 'MASTER' && (
-                    <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition duration-300 flex overflow-hidden">
-                        <div className="bg-orange-600 w-24 flex items-center justify-center shrink-0">
-                            <Building2 className="w-10 h-10 text-white" />
-                        </div>
-                        <div className="p-6 flex-1">
-                            <h2 className="text-xl font-semibold mb-2 text-gray-800">Unidades</h2>
-                            <p className="text-gray-600 mb-4">Gerencie as unidades (UMC, SEBRAE/SP, etc).</p>
-                            <Link to="/units" className="inline-block text-orange-600 font-medium hover:text-orange-800 transition">Gerenciar Unidades &rarr;</Link>
-                        </div>
-                    </div>
-                )}
-            </div>
-        </div >
+        </div>
     );
 };
 

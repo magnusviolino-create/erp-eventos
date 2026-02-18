@@ -2,6 +2,7 @@ import { useState, useEffect, type FormEvent, type FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { ArrowLeft, Save } from 'lucide-react';
+import { ThemeToggle } from '../components/ThemeToggle';
 
 const ProfilePage: FC = () => {
     const navigate = useNavigate();
@@ -91,31 +92,32 @@ const ProfilePage: FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 p-6 md:p-12">
-            <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6 md:p-12 transition-colors duration-300">
+            <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden transition-colors duration-300">
                 <div className="p-8">
                     <div className="flex items-center justify-between mb-8">
                         <div className="flex items-center gap-3">
                             <button
                                 onClick={() => navigate('/dashboard')}
-                                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
                                 title="Voltar"
                             >
-                                <ArrowLeft className="w-6 h-6 text-gray-600" />
+                                <ArrowLeft className="w-6 h-6 text-gray-600 dark:text-gray-300" />
                             </button>
-                            <h1 className="text-2xl font-bold text-gray-800">Meu Perfil</h1>
+                            <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Meu Perfil</h1>
                         </div>
+                        <ThemeToggle />
                     </div>
 
                     {error && (
-                        <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r">
+                        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 text-red-700 dark:text-red-400 rounded-r">
                             <p className="font-medium">Erro</p>
                             <p className="text-sm">{error}</p>
                         </div>
                     )}
 
                     {success && (
-                        <div className="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-r">
+                        <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500 text-green-700 dark:text-green-400 rounded-r">
                             <p className="font-medium">Sucesso</p>
                             <p className="text-sm">{success}</p>
                         </div>
@@ -123,50 +125,50 @@ const ProfilePage: FC = () => {
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Nome Completo</label>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nome Completo</label>
                             <input
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                                 required
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">E-mail</label>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">E-mail</label>
                             <input
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                                 required
                             />
                         </div>
 
-                        <div className="border-t border-gray-100 pt-6 mt-6">
-                            <h3 className="text-lg font-medium text-gray-800 mb-4">Alterar Senha</h3>
-                            <p className="text-sm text-gray-500 mb-4">Deixe em branco para manter a senha atual.</p>
+                        <div className="border-t border-gray-100 dark:border-gray-700 pt-6 mt-6">
+                            <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">Alterar Senha</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Deixe em branco para manter a senha atual.</p>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Nova Senha</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nova Senha</label>
                                     <input
                                         type="password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                                         placeholder="Mínimo 6 caracteres"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Confirmar Senha</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Confirmar Senha</label>
                                     <input
                                         type="password"
                                         value={confirmPassword}
                                         onChange={(e) => setConfirmPassword(e.target.value)}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                                         placeholder="Repita a nova senha"
                                     />
                                 </div>
@@ -177,7 +179,7 @@ const ProfilePage: FC = () => {
                             <button
                                 type="button"
                                 onClick={() => navigate('/dashboard')}
-                                className="px-6 py-2.5 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-all border border-gray-300"
+                                className="px-6 py-2.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-all border border-gray-300 dark:border-gray-600"
                             >
                                 Cancelar
                             </button>
