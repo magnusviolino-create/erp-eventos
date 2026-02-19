@@ -19,6 +19,11 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3001;
 
+// Temp Debug
+import { listUsers, runSeed } from './controllers/DebugController.js';
+app.get('/api/debug/users', listUsers);
+app.post('/api/debug/seed', runSeed);
+
 // @ts-ignore
 app.use(helmet());
 app.use(cors());
