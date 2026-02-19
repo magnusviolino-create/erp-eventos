@@ -1,0 +1,15 @@
+{
+  "framework": "vite",
+  "buildCommand": "cd client && npm install && npm run build && cd .. && mkdir -p dist && cp -r client/dist/* dist/",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

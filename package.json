@@ -1,0 +1,11 @@
+{
+    "name": "erp-eventos-root",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "build": "cd client && npm install && npm run build && cd .. && mkdir -p dist && cp -r client/dist/* dist/"
+    },
+    "engines": {
+        "node": "20.x"
+    }
+}
