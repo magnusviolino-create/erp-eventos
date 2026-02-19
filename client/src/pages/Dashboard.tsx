@@ -4,7 +4,7 @@ import api from '../services/api';
 import type { Event } from '../types/Event';
 import { Link } from 'react-router-dom';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
-import { Calendar, PlusCircle, Users, Building2, PlayCircle, CheckCircle, XCircle, Clock, PauseCircle } from 'lucide-react';
+import { Calendar, PlusCircle, Users, Building2, PlayCircle, CheckCircle, XCircle, Clock, PauseCircle, UserCog, Briefcase } from 'lucide-react';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { WhatsAppButton } from '../components/WhatsAppButton';
 import { useTheme } from '../contexts/ThemeContext';
@@ -877,6 +877,32 @@ const Dashboard: FC = () => {
                                 <h2 className="text-xl font-semibold mb-2 text-gray-800 dark:text-white">Unidades</h2>
                                 <p className="text-gray-600 dark:text-gray-300 mb-4">Gerencie as unidades (UMC, SEBRAE/SP, etc).</p>
                                 <Link to="/units" className="inline-block text-orange-600 dark:text-orange-400 font-medium hover:text-orange-800 dark:hover:text-orange-300 transition">Gerenciar Unidades &rarr;</Link>
+                            </div>
+                        </div>
+                    )}
+
+                    {user?.role === 'MASTER' && (
+                        <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg hover:shadow-xl transition duration-300 flex overflow-hidden">
+                            <div className="bg-teal-600 w-24 flex items-center justify-center shrink-0">
+                                <UserCog className="w-10 h-10 text-white" />
+                            </div>
+                            <div className="p-6 flex-1">
+                                <h2 className="text-xl font-semibold mb-2 text-gray-800 dark:text-white">Operadores</h2>
+                                <p className="text-gray-600 dark:text-gray-300 mb-4">Gerencie os operadores do sistema.</p>
+                                <Link to="/operators" className="inline-block text-teal-600 dark:text-teal-400 font-medium hover:text-teal-800 dark:hover:text-teal-300 transition">Gerenciar Operadores &rarr;</Link>
+                            </div>
+                        </div>
+                    )}
+
+                    {user?.role === 'MASTER' && (
+                        <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg hover:shadow-xl transition duration-300 flex overflow-hidden">
+                            <div className="bg-indigo-600 w-24 flex items-center justify-center shrink-0">
+                                <Briefcase className="w-10 h-10 text-white" />
+                            </div>
+                            <div className="p-6 flex-1">
+                                <h2 className="text-xl font-semibold mb-2 text-gray-800 dark:text-white">Serviços</h2>
+                                <p className="text-gray-600 dark:text-gray-300 mb-4">Gerencie os serviços disponíveis.</p>
+                                <Link to="/services" className="inline-block text-indigo-600 dark:text-indigo-400 font-medium hover:text-indigo-800 dark:hover:text-indigo-300 transition">Gerenciar Serviços &rarr;</Link>
                             </div>
                         </div>
                     )}

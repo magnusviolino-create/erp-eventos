@@ -89,6 +89,41 @@ async function main() {
     });
 
     console.log('Event Created:', event);
+
+    // 5. Create Operators
+    const specificOperators = [
+        'Magno', 'Vandson', 'Itallo', 'Maria', 'Kauê',
+        'Julianne', 'Giovanna', 'Agência', 'Ronaldo'
+    ];
+
+    console.log('Cleaning old Operators...');
+    try {
+        await prisma.operator.deleteMany({});
+    } catch (e) {
+        console.log('Error cleaning operators:', e);
+    }
+
+    console.log('Seeding Correct Operators...');
+    for (const name of specificOperators) {
+        const exists = await prisma.operator.findFirst({ where: { name } });
+        if (!exists) {
+            await prisma.operator.create({ data: { name } });
+        }
+    }
+
+    // 6. Create Services
+    const servicesData = [
+        'Criação de Card', 'Criação de Banner', 'Edição de Vídeo', 'Fotografia', 'Filmagem',
+        'Gestão de Tráfego', 'Redação', 'Revisão', 'Cerimonial', 'Recepção'
+    ];
+
+    console.log('Seeding Services...');
+    for (const name of servicesData) {
+        const exists = await prisma.service.findFirst({ where: { name } });
+        if (!exists) {
+            await prisma.service.create({ data: { name } });
+        }
+    }
 }
 
 main()

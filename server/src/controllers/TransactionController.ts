@@ -9,15 +9,18 @@ const transactionSchema = z.object({
     description: z.string().min(1),
     amount: z.number().min(0),
     type: z.nativeEnum(TransactionType),
-    eventId: z.string().uuid(),
+    status: z.nativeEnum(TransactionStatus).optional().default(TransactionStatus.QUOTATION),
     requisitionNum: z.string().optional(),
     serviceOrderNum: z.string().optional(),
-    status: z.nativeEnum(TransactionStatus).optional().default(TransactionStatus.QUOTATION),
+    eventId: z.string().uuid(),
+    requisitionId: z.string().uuid().optional(),
+    quantity: z.number().int().min(1).default(1),
+    deliveryDate: z.string().transform((str) => new Date(str)).optional(),
 });
 
 export const createTransaction = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        const { description, amount, type, eventId, requisitionNum, serviceOrderNum, status } = transactionSchema.parse(req.body);
+        const { description, amount, type, eventId, requisitionNum, serviceOrderNum, status, requisitionId, quantity, deliveryDate } = transactionSchema.parse(req.body);
         const { id: userId, unitId, role } = req.user;
 
         const event = await prisma.event.findUnique({ where: { id: eventId } });
@@ -28,13 +31,6 @@ export const createTransaction = async (req: AuthRequest, res: Response): Promis
         }
 
         // Access Control
-        // Users can only add transactions to events they have access to modify (or at least view?)
-        // Usually, only those who can edit the event should add expenses.
-        // MASTER: All access
-        // MANAGER: Own unit
-        // STANDARD: Own unit
-        // OBSERVER: Read only (Blocked in middleware usually, but good to check)
-
         if (role === 'OBSERVER') {
             res.status(403).json({ error: 'Observers cannot create transactions' });
             return;
@@ -60,6 +56,9 @@ export const createTransaction = async (req: AuthRequest, res: Response): Promis
                 requisitionNum,
                 serviceOrderNum,
                 status,
+                requisitionId,
+                quantity,
+                deliveryDate,
             },
         });
 
@@ -124,14 +123,16 @@ export const updateTransaction = async (req: AuthRequest, res: Response): Promis
         const { role, unitId, id: userId } = req.user;
 
         const updateSchema = z.object({
-            description: z.string().min(1),
-            amount: z.number().min(0),
+            description: z.string().min(1).optional(),
+            amount: z.number().min(0).optional(),
             requisitionNum: z.string().optional(),
             serviceOrderNum: z.string().optional(),
             status: z.nativeEnum(TransactionStatus).optional(),
+            quantity: z.number().int().min(1).optional(),
+            deliveryDate: z.string().transform((str) => new Date(str)).optional(),
         });
 
-        const { description, amount, requisitionNum, serviceOrderNum, status } = updateSchema.parse(req.body);
+        const { description, amount, requisitionNum, serviceOrderNum, status, quantity, deliveryDate } = updateSchema.parse(req.body);
 
         if (role === 'OBSERVER') {
             res.status(403).json({ error: 'Observers cannot update transactions' });
@@ -169,6 +170,8 @@ export const updateTransaction = async (req: AuthRequest, res: Response): Promis
                 requisitionNum,
                 serviceOrderNum,
                 status,
+                quantity,
+                deliveryDate,
             },
         });
 

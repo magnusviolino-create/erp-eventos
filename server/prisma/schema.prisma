@@ -71,6 +71,8 @@ model Event {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   transactions Transaction[]
+  communicationItems CommunicationItem[]
+  requisitions Requisition[]
 
   @@map("events")
 }
@@ -94,14 +96,89 @@ model Transaction {
   description     String
   amount          Float
   type            TransactionType
-  status          TransactionStatus @default(QUOTATION) // New Status Field
-  requisitionNum  String? // Número da Requisição
-  serviceOrderNum String? // Número da OC (Ordem de Serviço/Compra)
+  status          TransactionStatus @default(QUOTATION)
+  requisitionNum  String? // Manter por enquanto para histórico, mas o oficial será via relation
+  serviceOrderNum String?
   date            DateTime        @default(now())
+  
   eventId         String
-  event       Event           @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event           Event           @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  requisitionId   String?
+  requisition     Requisition?    @relation(fields: [requisitionId], references: [id], onDelete: Cascade)
+
+  quantity        Int             @default(1)
+  deliveryDate    DateTime?
+
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
 
   @@map("transactions")
+}
+
+model Requisition {
+  id          String   @id @default(uuid())
+  number      Int      @default(autoincrement()) // Numeração sequencial automática
+  
+  eventId     String
+  event       Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  transactions Transaction[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("requisitions")
+}
+
+model Operator {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  communicationItems CommunicationItem[]
+
+  @@map("operators")
+}
+
+model Service {
+  id        String   @id @default(uuid())
+  name      String
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  communicationItems CommunicationItem[]
+
+  @@map("services")
+}
+
+enum CommunicationStatus {
+  AGUARDANDO
+  EM_ATENDIMENTO
+  CRIACAO
+  APROVADO
+  REPROVADO
+}
+
+model CommunicationItem {
+  id          String   @id @default(uuid())
+  
+  eventId     String
+  event       Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  serviceId   String
+  service     Service  @relation(fields: [serviceId], references: [id])
+
+  operatorId  String?
+  operator    Operator? @relation(fields: [operatorId], references: [id])
+
+  deliveryDate DateTime @default(now())
+  quantity    Int      @default(1)
+  
+  status      CommunicationStatus @default(AGUARDANDO)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("communication_items")
 }

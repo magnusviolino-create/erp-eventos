@@ -12,6 +12,8 @@ import UserFormPage from './pages/UserFormPage';
 import UnitsPage from './pages/UnitsPage';
 import UnitFormPage from './pages/UnitFormPage';
 import ProfilePage from './pages/ProfilePage';
+import OperatorsPage from './pages/OperatorsPage';
+import ServicesPage from './pages/ServicesPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -37,6 +39,11 @@ function App() {
 
               <Route path="/units" element={<UnitsPage />} />
               <Route path="/units/new" element={<UnitFormPage />} />
+              <Route path="/units" element={<UnitsPage />} />
+              <Route path="/units/new" element={<UnitFormPage />} />
+
+              <Route path="/operators" element={<OperatorsPage />} />
+              <Route path="/services" element={<ServicesPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/login" replace />} />

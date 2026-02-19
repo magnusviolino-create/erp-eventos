@@ -12,4 +12,7 @@ export interface Transaction {
     eventId: string;
     requisitionNum?: string;
     serviceOrderNum?: string;
+    requisitionId?: string;
+    quantity?: number;
+    deliveryDate?: string;
 }

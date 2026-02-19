@@ -3,13 +3,15 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import type { Event } from '../types/Event';
 import type { Transaction } from '../types/Transaction';
+import type { Requisition } from '../types/Requisition';
 
-export const generateRequisitionPDF = (event: Event, selectedTransactions: Transaction[]) => {
+export const generateRequisitionPDF = (event: Event, selectedTransactions: Transaction[], requisition?: Requisition) => {
     const doc = new jsPDF();
 
     // Title
     doc.setFontSize(18);
-    doc.text(`Solicitação de Itens - ${event.name}`, 14, 22);
+    const title = requisition ? `Requisição #${requisition.number} - ${event.name}` : `Solicitação de Itens - ${event.name}`;
+    doc.text(title, 14, 22);
 
     // Event Details
     doc.setFontSize(12);
@@ -81,22 +83,24 @@ export const generateRequisitionPDF = (event: Event, selectedTransactions: Trans
         yPos += 4;
     }
 
-
-
     // Table Data
+    const formatCurrency = (value: number) => {
+        return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+    };
+
     const tableData = selectedTransactions.map(t => [
-        t.date ? new Date(t.date).toLocaleDateString('pt-BR') : '-',
+        t.quantity || 1,
         t.description,
-        t.requisitionNum || '-',
         t.status === 'APPROVED' ? 'Aprovado' :
             t.status === 'QUOTATION' ? 'Orçamento' :
                 t.status === 'PRODUCTION' ? 'Produção' :
                     t.status === 'COMPLETED' ? 'Concluído' :
                         t.status === 'REJECTED' ? 'Reprovado' : t.status,
+        formatCurrency(t.amount),
     ]);
 
     // Table Headers
-    const tableHeaders = [['Data', 'Descrição', 'Nº Req.', 'Status']];
+    const tableHeaders = [['Qtd', 'Descrição', 'Status', 'Valor Unit.']];
 
     // Generate Table
     autoTable(doc, {
@@ -106,8 +110,16 @@ export const generateRequisitionPDF = (event: Event, selectedTransactions: Trans
         theme: 'grid',
         styles: { fontSize: 10, cellPadding: 2 },
         headStyles: { fillColor: [41, 128, 185], textColor: 255 }, // Blue header
+        columnStyles: {
+            0: { halign: 'center' }, // Qtd
+            3: { halign: 'right' },  // Value
+        }
     });
 
     // Save PDF
-    doc.save(`solicitacao_${event.name.replace(/\s+/g, '_').toLowerCase()}.pdf`);
+    const filename = requisition
+        ? `requisicao_${requisition.number}_${event.name.replace(/\s+/g, '_').toLowerCase()}.pdf`
+        : `solicitacao_${event.name.replace(/\s+/g, '_').toLowerCase()}.pdf`;
+
+    doc.save(filename);
 };
