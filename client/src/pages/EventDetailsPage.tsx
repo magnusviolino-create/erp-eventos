@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import api from '../services/api';
 import type { Event } from '../types/Event';
 import { useParams, Link } from 'react-router-dom';
-import { FileText, Edit, PlayCircle, CheckCircle, PauseCircle, XCircle, DollarSign, MessageSquare } from 'lucide-react';
+import { Edit, PlayCircle, CheckCircle, PauseCircle, XCircle, DollarSign, MessageSquare } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import RequisitionsModal from '../components/RequisitionsModal';
 import CommunicationModal from '../components/CommunicationModal';

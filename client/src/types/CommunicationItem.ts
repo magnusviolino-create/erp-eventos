@@ -1,6 +1,6 @@
 
-import { Operator } from './Operator';
-import { Service } from './Service';
+import type { Operator } from './Operator';
+import type { Service } from './Service';
 
 export interface Unit {
     id: string;

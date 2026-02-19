@@ -15,7 +15,7 @@ interface RequisitionsModalProps {
     onUpdate?: () => void;
 }
 
-const RequisitionsModal = ({ isOpen, onClose, eventId, event, onUpdate }: RequisitionsModalProps) => {
+const RequisitionsModal = ({ isOpen, onClose, eventId, event }: RequisitionsModalProps) => {
     const [requisitions, setRequisitions] = useState<Requisition[]>([]);
     const [loading, setLoading] = useState(true);
     const [viewMode, setViewMode] = useState<'LIST' | 'DETAILS'>('LIST');
