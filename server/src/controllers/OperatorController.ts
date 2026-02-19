@@ -39,7 +39,7 @@ export const createOperator = async (req: AuthRequest, res: Response): Promise<v
         res.status(201).json(operator);
     } catch (error) {
         if (error instanceof z.ZodError) {
-            res.status(400).json({ error: error.errors });
+            res.status(400).json({ error: error.issues });
             return;
         }
         res.status(500).json({ error: 'Failed to create operator' });
@@ -48,7 +48,7 @@ export const createOperator = async (req: AuthRequest, res: Response): Promise<v
 
 export const updateOperator = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        const { id } = req.params;
+        const { id } = req.params as { id: string };
         const { name } = operatorSchema.parse(req.body);
 
         const operator = await prisma.operator.update({
@@ -63,7 +63,7 @@ export const updateOperator = async (req: AuthRequest, res: Response): Promise<v
 
 export const deleteOperator = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        const { id } = req.params;
+        const { id } = req.params as { id: string };
         await prisma.operator.delete({ where: { id } });
         res.status(204).send();
     } catch (error) {

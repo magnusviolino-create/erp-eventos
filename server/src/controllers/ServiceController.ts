@@ -32,7 +32,7 @@ export const createService = async (req: AuthRequest, res: Response): Promise<vo
         res.status(201).json(service);
     } catch (error) {
         if (error instanceof z.ZodError) {
-            res.status(400).json({ error: error.errors });
+            res.status(400).json({ error: error.issues });
             return;
         }
         res.status(500).json({ error: 'Failed to create service' });
@@ -41,7 +41,7 @@ export const createService = async (req: AuthRequest, res: Response): Promise<vo
 
 export const updateService = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        const { id } = req.params;
+        const { id } = req.params as { id: string };
         const data = serviceSchema.parse(req.body);
 
         const service = await prisma.service.update({
@@ -56,7 +56,7 @@ export const updateService = async (req: AuthRequest, res: Response): Promise<vo
 
 export const deleteService = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        const { id } = req.params;
+        const { id } = req.params as { id: string };
         await prisma.service.delete({ where: { id } });
         res.status(204).send();
     } catch (error) {

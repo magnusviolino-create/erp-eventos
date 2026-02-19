@@ -55,7 +55,7 @@ export const createRequisition = async (req: AuthRequest, res: Response): Promis
 
 export const deleteRequisition = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        const { id } = req.params;
+        const { id } = req.params as { id: string };
         await prisma.requisition.delete({ where: { id } });
         res.status(204).send();
     } catch (error) {
@@ -65,7 +65,7 @@ export const deleteRequisition = async (req: AuthRequest, res: Response): Promis
 
 export const getRequisitionById = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        const { id } = req.params;
+        const { id } = req.params as { id: string };
         const requisition = await prisma.requisition.findUnique({
             where: { id },
             include: { transactions: true }

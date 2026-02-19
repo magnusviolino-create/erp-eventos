@@ -58,7 +58,7 @@ export const createCommunicationItem = async (req: AuthRequest, res: Response): 
         res.status(201).json(item);
     } catch (error) {
         if (error instanceof z.ZodError) {
-            res.status(400).json({ error: error.errors });
+            res.status(400).json({ error: error.issues });
             return;
         }
         res.status(500).json({ error: 'Failed to create communication item', details: error });
@@ -67,7 +67,7 @@ export const createCommunicationItem = async (req: AuthRequest, res: Response): 
 
 export const updateCommunicationItem = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        const { id } = req.params;
+        const { id } = req.params as { id: string };
         // Allow partial updates? For now assume full re-submit or mostly full.
         // Actually, let's use the same schema but partial maybe?
         // Or just let the FE send everything. Dashboard usually sends all.
@@ -89,7 +89,7 @@ export const updateCommunicationItem = async (req: AuthRequest, res: Response): 
 
 export const deleteCommunicationItem = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
-        const { id } = req.params;
+        const { id } = req.params as { id: string };
         await prisma.communicationItem.delete({ where: { id } });
         res.status(204).send();
     } catch (error) {
