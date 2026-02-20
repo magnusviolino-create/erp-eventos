@@ -20,9 +20,11 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 // Temp Debug
-import { listUsers, runSeed } from './controllers/DebugController.js';
+import { listUsers, runSeed, cleanupEvents, fixRequisitions } from './controllers/DebugController.js';
 app.get('/api/debug/users', listUsers);
 app.post('/api/debug/seed', runSeed);
+app.post('/api/debug/cleanup-events', cleanupEvents);
+app.post('/api/debug/fix-requisitions', fixRequisitions);
 
 // @ts-ignore
 app.use(helmet());
