@@ -57,31 +57,43 @@ async function main() {
             userId: master.id,
             unitId: unit.id,
             transactions: {
+                create: []
+            },
+            requisitions: {
                 create: [
                     {
-                        description: 'Banner',
-                        amount: 1000,
-                        type: TransactionType.EXPENSE,
-                        status: TransactionStatus.APPROVED,
-                        requisitionNum: '25',
-                        serviceOrderNum: '1524',
-                        date: new Date('2026-02-16'),
+                        number: 25,
+                        transactions: {
+                            create: [
+                                {
+                                    description: 'Banner',
+                                    amount: 1000,
+                                    type: TransactionType.EXPENSE,
+                                    status: TransactionStatus.APPROVED,
+                                    requisitionNum: '25',
+                                    serviceOrderNum: '1524',
+                                    date: new Date('2026-02-16'),
+                                    quantity: 1
+                                }
+                            ]
+                        }
                     },
                     {
-                        description: 'Painel em lona',
-                        amount: 5000,
-                        type: TransactionType.EXPENSE,
-                        status: TransactionStatus.QUOTATION,
-                        requisitionNum: '26',
-                        serviceOrderNum: '3506',
-                        date: new Date('2026-02-16'),
-                    },
-                    {
-                        description: 'Sonorização',
-                        amount: 3000,
-                        type: TransactionType.EXPENSE,
-                        status: TransactionStatus.PRODUCTION,
-                        date: new Date('2026-02-18'),
+                        number: 26,
+                        transactions: {
+                            create: [
+                                {
+                                    description: 'Painel em lona',
+                                    amount: 5000,
+                                    type: TransactionType.EXPENSE,
+                                    status: TransactionStatus.QUOTATION,
+                                    requisitionNum: '26',
+                                    serviceOrderNum: '3506',
+                                    date: new Date('2026-02-16'),
+                                    quantity: 1
+                                }
+                            ]
+                        }
                     }
                 ]
             }
