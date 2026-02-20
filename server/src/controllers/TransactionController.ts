@@ -47,6 +47,11 @@ export const createTransaction = async (req: AuthRequest, res: Response): Promis
             }
         }
 
+        if (event.status === 'COMPLETED' && role !== 'MASTER') {
+            res.status(403).json({ error: 'Cannot create transactions for a completed event' });
+            return;
+        }
+
         const transaction = await prisma.transaction.create({
             data: {
                 description,
@@ -108,6 +113,11 @@ export const deleteTransaction = async (req: AuthRequest, res: Response): Promis
             }
         }
 
+        if (event.status === 'COMPLETED' && role !== 'MASTER') {
+            res.status(403).json({ error: 'Cannot delete transactions from a completed event' });
+            return;
+        }
+
         await prisma.transaction.delete({ where: { id } });
         res.status(204).send();
 
@@ -160,6 +170,11 @@ export const updateTransaction = async (req: AuthRequest, res: Response): Promis
                 res.status(403).json({ error: 'Access denied' });
                 return;
             }
+        }
+
+        if (event.status === 'COMPLETED' && role !== 'MASTER') {
+            res.status(403).json({ error: 'Cannot update transactions of a completed event' });
+            return;
         }
 
         const updatedTransaction = await prisma.transaction.update({

@@ -4,13 +4,15 @@ import api from '../services/api';
 import type { CommunicationItem, CommunicationStatus } from '../types/CommunicationItem';
 import type { Operator } from '../types/Operator';
 import type { Service } from '../types/Service';
-import { Plus, Edit, Trash2, X, MessageSquare } from 'lucide-react';
+import type { Event } from '../types/Event';
+import { Plus, Edit, Trash2, X, MessageSquare, Lock } from 'lucide-react'; // Added Lock icon
 import { useAuth } from '../contexts/AuthContext';
 
 interface CommunicationModalProps {
     isOpen: boolean;
     onClose: () => void;
     eventId: string;
+    event?: Event | null;
 }
 
 // Extend CommunicationItem type locally since we might not have updated the types file yet
@@ -20,8 +22,9 @@ interface ExtendedCommunicationItem extends Omit<CommunicationItem, 'date'> {
     quantity: number;
 }
 
-const CommunicationModal = ({ isOpen, onClose, eventId }: CommunicationModalProps) => {
+const CommunicationModal = ({ isOpen, onClose, eventId, event }: CommunicationModalProps) => {
     const { user } = useAuth();
+    const isReadOnly = event?.status === 'COMPLETED' && user?.role !== 'MASTER';
     const [items, setItems] = useState<ExtendedCommunicationItem[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -258,9 +261,15 @@ const CommunicationModal = ({ isOpen, onClose, eventId }: CommunicationModalProp
                         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                             <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800">
                                 <h3 className="font-semibold text-gray-700 dark:text-gray-200">Solicitações ({items.length})</h3>
-                                <button onClick={handleNew} className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-sm font-medium shadow-sm">
-                                    <Plus size={18} /> Nova Solicitação
-                                </button>
+                                {isReadOnly ? (
+                                    <span className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-500 rounded-lg text-sm font-medium shadow-sm cursor-not-allowed">
+                                        <Lock size={16} /> Somente Leitura
+                                    </span>
+                                ) : (
+                                    <button onClick={handleNew} className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-sm font-medium shadow-sm">
+                                        <Plus size={18} /> Nova Solicitação
+                                    </button>
+                                )}
                             </div>
 
                             <div className="overflow-x-auto">
@@ -294,10 +303,14 @@ const CommunicationModal = ({ isOpen, onClose, eventId }: CommunicationModalProp
                                                     <td className="p-4 text-gray-700 dark:text-gray-300">{item.quantity}</td>
                                                     <td className="p-4 text-gray-700 dark:text-gray-300">{item.operator?.name || '-'}</td>
                                                     <td className="p-4">{getStatusBadge(item.status)}</td>
-                                                    <td className="p-4 flex justify-center gap-2">
-                                                        <button onClick={() => handleEdit(item)} className="text-blue-600 hover:text-blue-800 p-1 rounded hover:bg-blue-50 dark:hover:bg-blue-900/30 transition" title="Editar"><Edit size={16} /></button>
-                                                        <button onClick={() => handleDelete(item.id)} className="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/30 transition" title="Excluir"><Trash2 size={16} /></button>
-                                                    </td>
+                                                    {isReadOnly ? (
+                                                        <span className="text-gray-400 p-2"><Lock size={14} /></span>
+                                                    ) : (
+                                                        <td className="p-4 flex justify-center gap-2">
+                                                            <button onClick={() => handleEdit(item)} className="text-blue-600 hover:text-blue-800 p-1 rounded hover:bg-blue-50 dark:hover:bg-blue-900/30 transition" title="Editar"><Edit size={16} /></button>
+                                                            <button onClick={() => handleDelete(item.id)} className="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/30 transition" title="Excluir"><Trash2 size={16} /></button>
+                                                        </td>
+                                                    )}
                                                 </tr>
                                             ))
                                         )}

@@ -56,7 +56,10 @@ const EventDetailsPage = () => {
     if (loading) return <div className="p-8 text-center text-gray-500 dark:text-gray-400">Carregando detalhes...</div>;
     if (!event) return <div className="p-8 text-center text-red-500">Evento não encontrado.</div>;
 
-    const totalExpense = event.transactions?.reduce((acc, t) => acc + t.amount, 0) || 0;
+    const totalExpense = event.transactions?.reduce((acc, t) => {
+        if (t.status === 'REJECTED') return acc;
+        return acc + t.amount;
+    }, 0) || 0;
     const balance = (event.budget || 0) - totalExpense;
 
     return (
@@ -150,7 +153,7 @@ const EventDetailsPage = () => {
                                 <PlayCircle size={18} /> Reabrir Evento
                             </button>
                         )}
-                        {event.status !== 'CANCELED' && (
+                        {event.status !== 'CANCELED' && (event.status !== 'COMPLETED' || user?.role === 'MASTER') && (
                             <Link to={`/events/edit/${id}`} className="flex items-center gap-2 px-4 py-2 rounded font-medium border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 transition-colors">
                                 <Edit size={18} /> Editorial
                             </Link>
@@ -275,6 +278,7 @@ const EventDetailsPage = () => {
                     isOpen={isCommunicationOpen}
                     onClose={() => setIsCommunicationOpen(false)}
                     eventId={id || ''}
+                    event={event}
                 />
             )}
 

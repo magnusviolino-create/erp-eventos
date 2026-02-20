@@ -5,7 +5,8 @@ import type { Requisition } from '../types/Requisition';
 import type { Transaction, TransactionStatus } from '../types/Transaction';
 import type { Event } from '../types/Event';
 import { generateRequisitionPDF } from '../utils/pdfGenerator';
-import { FileText, Plus, Edit, Trash2, X, ArrowLeft, ChevronRight } from 'lucide-react';
+import { FileText, Plus, Edit, Trash2, X, ArrowLeft, ChevronRight, Lock } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 interface RequisitionsModalProps {
     isOpen: boolean;
@@ -15,7 +16,10 @@ interface RequisitionsModalProps {
     onUpdate?: () => void;
 }
 
-const RequisitionsModal = ({ isOpen, onClose, eventId, event }: RequisitionsModalProps) => {
+const RequisitionsModal = ({ isOpen, onClose, eventId, event, onUpdate }: RequisitionsModalProps) => {
+    const { user } = useAuth();
+    const isReadOnly = event?.status === 'COMPLETED' && user?.role !== 'MASTER';
+
     const [requisitions, setRequisitions] = useState<Requisition[]>([]);
     const [loading, setLoading] = useState(true);
     const [viewMode, setViewMode] = useState<'LIST' | 'DETAILS'>('LIST');
@@ -59,6 +63,7 @@ const RequisitionsModal = ({ isOpen, onClose, eventId, event }: RequisitionsModa
             const newReq = res.data;
             await fetchRequisitions(); // Refresh list
             handleOpenRequisition(newReq); // Open new requisition
+            if (onUpdate) onUpdate();
         } catch (error) {
             console.error(error);
             alert('Erro ao criar requisição.');
@@ -89,6 +94,7 @@ const RequisitionsModal = ({ isOpen, onClose, eventId, event }: RequisitionsModa
         try {
             await api.delete(`/requisitions/${id}`);
             fetchRequisitions();
+            if (onUpdate) onUpdate();
         } catch (error) {
             console.error(error);
             alert('Erro ao excluir requisição.');
@@ -160,6 +166,10 @@ const RequisitionsModal = ({ isOpen, onClose, eventId, event }: RequisitionsModa
             const res = await api.get(`/requisitions/${selectedRequisition.id}`);
             setSelectedRequisition(res.data);
             setIsItemFormOpen(false);
+
+            // Notify parent to update details (balance)
+            if (onUpdate) onUpdate();
+
         } catch (error) {
             console.error(error);
             alert('Erro ao salvar item.');
@@ -173,6 +183,7 @@ const RequisitionsModal = ({ isOpen, onClose, eventId, event }: RequisitionsModa
             if (selectedRequisition) {
                 const res = await api.get(`/requisitions/${selectedRequisition.id}`);
                 setSelectedRequisition(res.data);
+                if (onUpdate) onUpdate();
             }
         } catch (error) {
             console.error(error);
@@ -229,7 +240,10 @@ const RequisitionsModal = ({ isOpen, onClose, eventId, event }: RequisitionsModa
 
     // Calculations for list view
     const getRequisitionTotal = (req: Requisition) => {
-        return req.transactions?.reduce((acc, t) => acc + (t.amount * (t.quantity || 1)), 0) || 0;
+        return req.transactions?.reduce((acc, t) => {
+            if (t.status === 'REJECTED') return acc;
+            return acc + (t.amount * (t.quantity || 1));
+        }, 0) || 0;
     };
 
     const getRequisitionItemsCount = (req: Requisition) => {
@@ -271,9 +285,15 @@ const RequisitionsModal = ({ isOpen, onClose, eventId, event }: RequisitionsModa
                         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                             <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800">
                                 <h3 className="font-semibold text-gray-700 dark:text-gray-200">Requisições Cadastradas</h3>
-                                <button onClick={handleCreateRequisition} className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-sm font-medium shadow-sm">
-                                    <Plus size={16} /> Nova Requisição
-                                </button>
+                                {isReadOnly ? (
+                                    <span className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-500 rounded text-sm font-medium shadow-sm cursor-not-allowed">
+                                        <Lock size={14} /> Somente Leitura
+                                    </span>
+                                ) : (
+                                    <button onClick={handleCreateRequisition} className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-sm font-medium shadow-sm">
+                                        <Plus size={16} /> Nova Requisição
+                                    </button>
+                                )}
                             </div>
 
                             <table className="w-full text-left text-sm">
@@ -302,9 +322,11 @@ const RequisitionsModal = ({ isOpen, onClose, eventId, event }: RequisitionsModa
                                                     {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(getRequisitionTotal(req))}
                                                 </td>
                                                 <td className="p-4 text-center">
-                                                    <button onClick={(e) => handleDeleteRequisition(req.id, e)} className="text-red-600 hover:text-red-800 p-1.5 hover:bg-red-50 dark:hover:bg-red-900/30 rounded transition">
-                                                        <Trash2 size={16} />
-                                                    </button>
+                                                    {!isReadOnly && (
+                                                        <button onClick={(e) => handleDeleteRequisition(req.id, e)} className="text-red-600 hover:text-red-800 p-1.5 hover:bg-red-50 dark:hover:bg-red-900/30 rounded transition">
+                                                            <Trash2 size={16} />
+                                                        </button>
+                                                    )}
                                                 </td>
                                                 <td className="p-4 text-gray-400">
                                                     <ChevronRight size={18} className="group-hover:text-blue-600 transition-colors" />
@@ -330,9 +352,11 @@ const RequisitionsModal = ({ isOpen, onClose, eventId, event }: RequisitionsModa
                                     <button onClick={handleExportPDF} className="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-700 text-gray-700 dark:text-white border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 transition text-sm font-medium">
                                         <FileText size={16} /> Exportar Selecionados
                                     </button>
-                                    <button onClick={handleNewItem} className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-sm font-medium shadow-sm">
-                                        <Plus size={16} /> Adicionar Item
-                                    </button>
+                                    {!isReadOnly && (
+                                        <button onClick={handleNewItem} className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-sm font-medium shadow-sm">
+                                            <Plus size={16} /> Adicionar Item
+                                        </button>
+                                    )}
                                 </div>
                             </div>
 
@@ -364,8 +388,12 @@ const RequisitionsModal = ({ isOpen, onClose, eventId, event }: RequisitionsModa
                                                     {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(t.amount)}
                                                 </td>
                                                 <td className="p-4 flex justify-center gap-2">
-                                                    <button onClick={() => handleEditItem(t)} className="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded transition"><Edit size={16} /></button>
-                                                    <button onClick={() => handleDeleteItem(t.id)} className="text-red-600 hover:text-red-800 p-1 hover:bg-red-50 dark:hover:bg-red-900/30 rounded transition"><Trash2 size={16} /></button>
+                                                    {!isReadOnly && (
+                                                        <>
+                                                            <button onClick={() => handleEditItem(t)} className="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded transition"><Edit size={16} /></button>
+                                                            <button onClick={() => handleDeleteItem(t.id)} className="text-red-600 hover:text-red-800 p-1 hover:bg-red-50 dark:hover:bg-red-900/30 rounded transition"><Trash2 size={16} /></button>
+                                                        </>
+                                                    )}
                                                 </td>
                                             </tr>
                                         ))}

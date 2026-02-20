@@ -41,6 +41,19 @@ export const createCommunicationItem = async (req: AuthRequest, res: Response): 
     try {
         const data = communicationSchema.parse(req.body);
 
+        const { role } = req.user;
+        const event = await prisma.event.findUnique({ where: { id: data.eventId } });
+
+        if (!event) {
+            res.status(404).json({ error: 'Event not found' });
+            return;
+        }
+
+        if (event.status === 'COMPLETED' && role !== 'MASTER') {
+            res.status(403).json({ error: 'Cannot create communication items for a completed event' });
+            return;
+        }
+
         const item = await prisma.communicationItem.create({
             data: {
                 eventId: data.eventId,
@@ -68,10 +81,27 @@ export const createCommunicationItem = async (req: AuthRequest, res: Response): 
 export const updateCommunicationItem = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
         const { id } = req.params as { id: string };
+        const { role } = req.user;
+
         // Allow partial updates? For now assume full re-submit or mostly full.
         // Actually, let's use the same schema but partial maybe?
         // Or just let the FE send everything. Dashboard usually sends all.
         const data = communicationSchema.partial().parse(req.body);
+
+        const existingItem = await prisma.communicationItem.findUnique({
+            where: { id },
+            include: { event: true } // Need event to check status
+        });
+
+        if (!existingItem) {
+            res.status(404).json({ error: 'Item not found' });
+            return;
+        }
+
+        if (existingItem.event.status === 'COMPLETED' && role !== 'MASTER') {
+            res.status(403).json({ error: 'Cannot update items of a completed event' });
+            return;
+        }
 
         const item = await prisma.communicationItem.update({
             where: { id },
@@ -90,6 +120,23 @@ export const updateCommunicationItem = async (req: AuthRequest, res: Response): 
 export const deleteCommunicationItem = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
         const { id } = req.params as { id: string };
+        const { role } = req.user;
+
+        const item = await prisma.communicationItem.findUnique({
+            where: { id },
+            include: { event: true }
+        });
+
+        if (!item) {
+            res.status(404).json({ error: 'Item not found' });
+            return;
+        }
+
+        if (item.event.status === 'COMPLETED' && role !== 'MASTER') {
+            res.status(403).json({ error: 'Cannot delete items from a completed event' });
+            return;
+        }
+
         await prisma.communicationItem.delete({ where: { id } });
         res.status(204).send();
     } catch (error) {

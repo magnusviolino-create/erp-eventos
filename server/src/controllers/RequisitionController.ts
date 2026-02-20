@@ -34,10 +34,32 @@ export const getRequisitions = async (req: AuthRequest, res: Response): Promise<
 export const createRequisition = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
         const data = requisitionSchema.parse(req.body);
+        const { role } = req.user;
+
+        const event = await prisma.event.findUnique({ where: { id: data.eventId } });
+        if (!event) {
+            res.status(404).json({ error: 'Event not found' });
+            return;
+        }
+
+        if (event.status === 'COMPLETED' && role !== 'MASTER') {
+            res.status(403).json({ error: 'Cannot create requisitions for a completed event' });
+            return;
+        }
+
+        // Generate a random 6-digit number
+        // Loop to ensure uniqueness (basic collision check)
+        let number = Math.floor(100000 + Math.random() * 900000);
+        let exists = await prisma.requisition.findFirst({ where: { number } });
+        while (exists) {
+            number = Math.floor(100000 + Math.random() * 900000);
+            exists = await prisma.requisition.findFirst({ where: { number } });
+        }
 
         const requisition = await prisma.requisition.create({
             data: {
                 eventId: data.eventId,
+                number: number,
             },
             include: {
                 transactions: true,
@@ -56,6 +78,22 @@ export const createRequisition = async (req: AuthRequest, res: Response): Promis
 export const deleteRequisition = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
         const { id } = req.params as { id: string };
+        const { role } = req.user;
+
+        const requisition = await prisma.requisition.findUnique({
+            where: { id },
+            include: { event: true }
+        });
+
+        if (!requisition) {
+            res.status(404).json({ error: 'Requisition not found' });
+            return;
+        }
+
+        if (requisition.event.status === 'COMPLETED' && role !== 'MASTER') {
+            res.status(403).json({ error: 'Cannot delete requisitions from a completed event' });
+            return;
+        }
         await prisma.requisition.delete({ where: { id } });
         res.status(204).send();
     } catch (error) {

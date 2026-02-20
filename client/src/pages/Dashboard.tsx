@@ -203,12 +203,12 @@ const Carousel = ({ items }: { items: Event[] }) => {
                                             <div className="text-right">
                                                 <p className="text-gray-400 dark:text-gray-500 font-semibold text-[10px] uppercase tracking-wide mb-0.5">Saldo</p>
                                                 <p className={`font-bold text-base ${(event.budget - (event.transactions || [])
-                                                    .filter(t => t.type === 'EXPENSE')
+                                                    .filter(t => t.type === 'EXPENSE' && t.status !== 'REJECTED')
                                                     .reduce((acc, t) => acc + t.amount, 0)) >= 0 ? 'text-green-600' : 'text-red-600'
                                                     }`}>
                                                     {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
                                                         event.budget - (event.transactions || [])
-                                                            .filter(t => t.type === 'EXPENSE')
+                                                            .filter(t => t.type === 'EXPENSE' && t.status !== 'REJECTED')
                                                             .reduce((acc, t) => acc + t.amount, 0)
                                                     )}
                                                 </p>
@@ -446,7 +446,7 @@ const Dashboard: FC = () => {
     const expensesPerUnit = filteredEvents.reduce((acc, event) => {
         const unitName = event.unit?.name || 'Sem Unidade';
         const eventExpenses = (event.transactions || [])
-            .filter(t => t.type === 'EXPENSE')
+            .filter(t => t.type === 'EXPENSE' && t.status !== 'REJECTED')
             .reduce((sum, t) => sum + t.amount, 0);
         acc[unitName] = (acc[unitName] || 0) + eventExpenses;
         return acc;

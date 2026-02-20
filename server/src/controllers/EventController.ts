@@ -196,6 +196,16 @@ export const updateEvent = async (req: AuthRequest, res: Response): Promise<void
             }
         }
 
+        if (event.status === 'COMPLETED' && role !== 'MASTER') {
+            // Allow changing status back to IN_PROGRESS? The user said "blocked". 
+            // If they want to re-open, they might need to be MASTER.
+            // Or maybe we allow status change but not content change?
+            // "só quem todos os itens fiquem bloqueados para que o usuário comum não consiga editar"
+            // Usually implies everything. If they want to reopen, they ask a Master. 
+            res.status(403).json({ error: 'Cannot edit a completed event' });
+            return;
+        }
+
         // Exclude unitId from update data to avoid type issues and unauthorized moves
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { unitId: _excludedUnitId, ...updateData } = validatedData;

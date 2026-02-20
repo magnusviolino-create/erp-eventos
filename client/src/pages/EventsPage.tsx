@@ -236,7 +236,7 @@ const EventsPage: FC = () => {
     const totalBudget = filteredEvents.reduce((acc, event) => acc + (event.budget || 0), 0);
     const totalSpent = filteredEvents.reduce((acc, event) => {
         const eventExpenses = (event.transactions || [])
-            .filter(t => t.type === 'EXPENSE')
+            .filter(t => t.type === 'EXPENSE' && t.status !== 'REJECTED')
             .reduce((sum, t) => sum + t.amount, 0);
         return acc + eventExpenses;
     }, 0);
@@ -671,12 +671,12 @@ const EventsPage: FC = () => {
                                                         <div className="text-right">
                                                             <p className="text-gray-400 dark:text-gray-500 font-semibold text-[10px] uppercase tracking-wide mb-0.5">Saldo</p>
                                                             <p className={`font-bold text-base ${(event.budget - (event.transactions || [])
-                                                                .filter(t => t.type === 'EXPENSE')
+                                                                .filter(t => t.type === 'EXPENSE' && t.status !== 'REJECTED')
                                                                 .reduce((acc, t) => acc + t.amount, 0)) >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
                                                                 }`}>
                                                                 {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
                                                                     event.budget - (event.transactions || [])
-                                                                        .filter(t => t.type === 'EXPENSE')
+                                                                        .filter(t => t.type === 'EXPENSE' && t.status !== 'REJECTED')
                                                                         .reduce((acc, t) => acc + t.amount, 0)
                                                                 )}
                                                             </p>
