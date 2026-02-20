@@ -56,52 +56,75 @@ async function main() {
             budget: 50000,
             userId: master.id,
             unitId: unit.id,
-            transactions: {
-                create: []
-            },
-            requisitions: {
-                create: [
-                    {
-                        number: 25,
-                        transactions: {
-                            create: [
-                                {
-                                    description: 'Banner',
-                                    amount: 1000,
-                                    type: TransactionType.EXPENSE,
-                                    status: TransactionStatus.APPROVED,
-                                    requisitionNum: '25',
-                                    serviceOrderNum: '1524',
-                                    date: new Date('2026-02-16'),
-                                    quantity: 1
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        number: 26,
-                        transactions: {
-                            create: [
-                                {
-                                    description: 'Painel em lona',
-                                    amount: 5000,
-                                    type: TransactionType.EXPENSE,
-                                    status: TransactionStatus.QUOTATION,
-                                    requisitionNum: '26',
-                                    serviceOrderNum: '3506',
-                                    date: new Date('2026-02-16'),
-                                    quantity: 1
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
+            // No nested transactions/requisitions here to avoid "missing event" error on grandchild
         },
     });
 
     console.log('Event Created:', event);
 
+    // 4.1 Create Requisitions and Transactions for the Event
+    await prisma.requisition.create({
+        data: {
+            eventId: event.id,
+            number: 25,
+            transactions: {
+                create: [
+                    {
+                        description: 'Banner',
+                        amount: 1000,
+                        type: TransactionType.EXPENSE,
+                        status: TransactionStatus.APPROVED,
+                        requisitionNum: '25',
+                        serviceOrderNum: '1524',
+                        date: new Date('2026-02-16'),
+                        quantity: 1,
+                        eventId: event.id // Explicitly link to event
+                    }
+                ]
+            }
+        }
+    });
+
+    await prisma.requisition.create({
+        data: {
+            eventId: event.id,
+            number: 26,
+            transactions: {
+                create: [
+                    {
+                        description: 'Painel em lona',
+                        amount: 5000,
+                        type: TransactionType.EXPENSE,
+                        status: TransactionStatus.QUOTATION,
+                        requisitionNum: '26',
+                        serviceOrderNum: '3506',
+                        date: new Date('2026-02-16'),
+                        quantity: 1,
+                        eventId: event.id // Explicitly link to event
+                    }
+                ]
+            }
+        }
+    });
+
+    const req27 = await prisma.requisition.create({
+        data: {
+            number: 27,
+            eventId: event.id
+        }
+    });
+
+    await prisma.transaction.create({
+        data: {
+            description: 'Sonorização',
+            amount: 3000,
+            type: TransactionType.EXPENSE,
+            status: TransactionStatus.PRODUCTION,
+            date: new Date('2026-02-18'),
+            eventId: event.id,
+            requisitionId: req27.id
+        }
+    });
     // 5. Create Operators
     const specificOperators = [
         'Magno', 'Vandson', 'Itallo', 'Maria', 'Kauê',
