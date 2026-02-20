@@ -2,8 +2,33 @@
     "name": "erp-eventos-root",
     "version": "1.0.0",
     "private": true,
+    "type": "module",
     "scripts": {
-        "build": "cd client && npm install && npm run build && cd .. && mkdir -p dist && cp -r client/dist/* dist/"
+        "build": "cd client && npm install && npm run build && cd ../server && npm install && npx prisma generate && cd .. && mkdir -p dist && cp -r client/dist/* dist/",
+        "postinstall": "cd server && npm install && npx prisma generate"
+    },
+    "dependencies": {
+        "@prisma/client": "^5.22.0",
+        "bcryptjs": "^3.0.3",
+        "cors": "^2.8.6",
+        "dotenv": "^17.3.1",
+        "express": "^5.2.1",
+        "helmet": "^8.1.0",
+        "jsonwebtoken": "^9.0.3",
+        "multer": "^2.0.2",
+        "tsx": "^4.21.0",
+        "zod": "^4.3.6"
+    },
+    "devDependencies": {
+        "@types/bcryptjs": "^2.4.6",
+        "@types/cors": "^2.8.19",
+        "@types/express": "^5.0.6",
+        "@types/jsonwebtoken": "^9.0.10",
+        "@types/multer": "^2.0.0",
+        "@types/node": "^25.2.3",
+        "prisma": "^5.22.0",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.9.3"
     },
     "engines": {
         "node": "20.x"
